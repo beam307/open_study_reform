@@ -1,6 +1,6 @@
 <template>
   <v-toolbar dark fixed scroll-off-screen>
-    <v-toolbar-title @click="goHome" class="home">OpenStudy</v-toolbar-title>
+    <v-btn flat to="/" class="home">OpenStudy</v-btn>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn flat to="/login">로그인</v-btn>
@@ -10,17 +10,21 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      goHome() {
-        window.location="/";
-      }
-    }
-  }
+  export default {}
 </script>
 
 <style scoped>
   .home {
     cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .home:before {
+    background-color: #212121;
   }
 </style>

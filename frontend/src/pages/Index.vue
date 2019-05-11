@@ -9,10 +9,10 @@
               <h3>"오픈스터디는 쉽고 빠른 스터디 매칭 서비스입니다"</h3>
               <v-form>
                 <v-layout wrap align-center justify-center>
-                  <v-flex md4 xs8>
+                  <v-flex md4 sm6 xs8>
                     <v-text-field height="36" autofocus label="검색어를 입력하세요." color="#f2f2f2"></v-text-field>
                   </v-flex>
-                  <v-flex md2 xs4>
+                  <v-flex md2 sm3 xs4>
                     <v-btn light type="submit">검색</v-btn>
                   </v-flex>
                 </v-layout>
@@ -109,6 +109,7 @@
   .theme--light.v-label {
     color: #f2f2f2;
   }
+
   .v-text-field > .v-input__control > .v-input__slot:before {
     border-color: #f2f2f2 !important;
   }
@@ -171,9 +172,14 @@
     margin-bottom: 30px;
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 960px) {
     .visual_contents h3 {
-      font-size: 0.9em;
+      font-size: 1.7em;
+    }
+  }
+  @media (max-width: 600px) {
+    .visual_contents h3 {
+      font-size: 1em;
     }
 
     .main-thumbnail h1 {
