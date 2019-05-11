@@ -1,27 +1,19 @@
 <template>
-  <div class="col-md-4">
-    <b-card
-      title="스터디썸네일 테스트"
-      img-src="https://picsum.photos/600/300/?image=25"
-      img-alt="Image"
-      img-top
-      tag="article"
-      style="text-align: center"
-      class="mb-2"
-    >
-      <b-card-text>
-        스터디썸네일 내용 부분
-      </b-card-text>
-
-      <b-button href="#" variant="primary">자세히보기</b-button>
-    </b-card>
-  </div>
+    <v-flex xs12 sm4 pa-2 mb-2>
+      <v-card>
+        <v-img src="https://picsum.photos/600/300/?image=25"></v-img>
+        <v-card-title primary-title>
+          스터디썸네일 내용 부분
+        </v-card-title>
+        <v-card-actions>
+          <v-btn flat color="orange">자세히보기</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
 </template>
 
 <script>
-  export default {
-
-  }
+  export default {}
 </script>
 
 <style>
