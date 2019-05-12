@@ -1,7 +1,6 @@
 <template>
-  <v-container mt-5 mb-5>
-    <v-layout mt-5 mb-5 justify-center>
-      <v-flex xs12 sm8 md5>
+    <v-layout justify-center wrap>
+      <v-flex xs12 sm8 md6>
         <Header/>
         <v-card class="pa-4">
           <v-toolbar class="pt-5 secondary darken-4">
@@ -74,12 +73,11 @@
         <Footer/>
       </v-flex>
     </v-layout>
-  </v-container>
 </template>
 
 <script>
-  import Header from '../components/layouts/Header'
-  import Footer from '../components/layouts/Footer'
+  import Header from '../../components/layouts/Header'
+  import Footer from '../../components/layouts/Footer'
 
   export default {
     data() {

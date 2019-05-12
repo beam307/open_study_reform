@@ -41,8 +41,50 @@
           </v-card-text>
           <v-card-text class="py-1 caption">
             아이디/비밀번호를 잊어버리셨나요?
-            <a class="link" data-toggle="modal" href="#findId">아이디찾기</a>
-            <a class="link" data-toggle="modal" href="#findId">비밀번호찾기</a>
+            <a class="link" data-toggle="modal" @click.stop="findId=true">아이디찾기</a>
+            <a class="link" data-toggle="modal" @click.stop="findPwd=true">비밀번호찾기</a>
+            <v-dialog v-model="findId" max-width="400">
+              <v-card>
+                <v-card-title class="headline">
+                  <span class="title">아이디찾기</span>
+                  <v-spacer></v-spacer>
+                  <v-btn icon @click="findId = false">
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-text-field label="전화번호"></v-text-field>
+                  <v-text-field label="임시이메일"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="green darken-1" flat="flat">
+                    아이디 찾기
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="findPwd" max-width="400">
+              <v-card>
+                <v-card-title class="headline">
+                  <span class="title">비밀번호찾기</span>
+                  <v-spacer></v-spacer>v
+                  <v-btn icon @click="findPwd = false">
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                </v-card-title>
+                <v-card-text>
+                  <v-text-field label="이메일"></v-text-field>
+                  <v-text-field label="이름"></v-text-field>
+                  <v-text-field label="생년월일"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="green darken-1" flat="flat">
+                    비밀번호 찾기
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-text>
           <v-card-text class="py-1 caption">
             아직 오픈스터디를 가입하시지않으셨나요?
@@ -57,12 +99,14 @@
 
 
 <script>
-  import Header from '../components/layouts/Header'
-  import Footer from '../components/layouts/Footer'
+  import Header from '../../components/layouts/Header'
+  import Footer from '../../components/layouts/Footer'
 
   export default {
     data() {
       return {
+        findId: false,
+        findPwd: false,
         valid: false,
         password: '',
         passwordRules: [
@@ -142,11 +186,12 @@
     text-decoration: none;
     color: #ccc;
   }
-  @media (max-width:600px) {
+
+  @media (max-width: 600px) {
     .link {
       display: block;
       padding-left: 0px;
     }
-    
+
   }
 </style>

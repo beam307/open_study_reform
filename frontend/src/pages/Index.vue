@@ -25,7 +25,7 @@
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              NEW STUDY <a href="#" class="more">더보기</a>
+              NEW STUDY <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
@@ -39,7 +39,7 @@
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              BEST STUDY <a href="#" class="more">더보기</a>
+              BEST STUDY <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
@@ -53,7 +53,7 @@
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              RECOMMENDING STUDY <a href="#" class="more">더보기</a>
+              RECOMMENDING STUDY <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
@@ -82,8 +82,17 @@
     },
   }
 </script>
-
 <style>
+
+  #visual .v-label {
+    color: #f2f2f2 !important;
+  }
+
+  #visual .v-input__slot:before {
+    border-color: #f2f2f2 !important;
+  }
+</style>
+<style scoped>
   #visual {
     position: relative;
     height: 700px;
@@ -104,14 +113,6 @@
   .visual_contents h3 {
     color: #fff;
     font-size: 35px;
-  }
-
-  .theme--light.v-label {
-    color: #f2f2f2;
-  }
-
-  .v-text-field > .v-input__control > .v-input__slot:before {
-    border-color: #f2f2f2 !important;
   }
 
   .visual_bg {
@@ -188,6 +189,13 @@
 
     .main-thumbnail h1 a {
       top: 15px;
+    }
+    #visual {
+      height: 450px;
+    }
+
+    .visual_contents {
+      top: 30%;
     }
   }
 </style>

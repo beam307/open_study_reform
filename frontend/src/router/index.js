@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from '../pages/Login'
-import join from '../pages/Join'
+import User from '../pages/user/User'
+import Study from '../pages/study/Study'
+import StudyList from '../pages/study/StudyList'
+import StudyRegister from '../pages/study/StudyRegister'
+import login from '../pages/login/Login'
+import UserSignUp from '../pages/user/UserSignUp'
 import Index from '../pages/Index'
 
 Vue.use(Router)
@@ -11,7 +15,20 @@ export default new Router({
   routes: [
     {path: '/', component: Index},
     {path: '/login', component: login},
-    {path: '/join', component: join},
+    {
+      path: '/user', component: User,
+      children: [{
+        path: 'signUp', component: UserSignUp
+      }]
+    },
+    {
+      path: '/study', component: Study,
+      children: [{
+        path: 'list', component: StudyList,
+      }, {
+        path: 'register', component: StudyRegister,
+      }]
+    },
     {path: '*', redirect: '/'}
   ]
 })
