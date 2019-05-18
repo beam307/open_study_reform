@@ -1,10 +1,10 @@
 <template>
-  <v-tabs v-model="active" dark grow show-arrows>
-    <v-tab v-for="category in categorys" :key="category.title" ripple>{{ category.title }}</v-tab>
-    <v-tab-item v-for="category in categorys" :key="category.title">
+  <v-tabs dark grow>
+    <v-tab v-for="category in categories" :key="category.title" ripple>{{ category.title }}</v-tab>
+    <v-tab-item v-for="category in categories" :key="category.title">
       <v-card flat>
         <v-layout wrap>
-          <v-flex xs12 sm4 v-for="item in category.items">
+          <v-flex xs12 sm4 v-for="item in category.items" :key="item">
             <v-checkbox :label="item"></v-checkbox>
           </v-flex>
         </v-layout>
@@ -17,7 +17,7 @@
   export default {
     data() {
       return {
-        categorys: [
+        categories: [
           {title: '영어', items: ['토익', '토플', '공무원', '회화', '독해']},
           {title: '외국어', items: ['중국어', '일본어', '독일어', '프랑스어', '스페인어']},
           {title: 'IT', items: ['웹개발', '게임개발', '자격증', '프론트엔드', '백엔드']},
