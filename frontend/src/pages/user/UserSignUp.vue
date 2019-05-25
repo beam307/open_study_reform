@@ -10,19 +10,19 @@
             <v-form v-model="valid" ref="form">
               <v-text-field class="caption"
                             label="이메일주소"
-                            v-model="email"
+                            v-model="userInfo.email"
                             :rules="emailRules"
                             required
               ></v-text-field>
               <v-text-field class="caption"
                             label="이름"
-                            v-model="name"
+                            v-model="userInfo.name"
                             :rules="nameRules"
                             required
               ></v-text-field>
               <v-text-field class="caption"
                             label="비밀번호"
-                            v-model="password"
+                            v-model="userInfo.password"
                             min="8"
                             type="password"
                             :rules="passwordRules"
@@ -30,7 +30,7 @@
               ></v-text-field>
               <v-text-field class="caption"
                             label="비밀번호확인"
-                            v-model="password"
+                            v-model="userInfo.password"
                             min="8"
                             type="password"
                             :rules="passwordRules"
@@ -38,17 +38,17 @@
               ></v-text-field>
               <v-text-field class="caption"
                             label="닉네임"
-                            v-model="nickname"
+                            v-model="userInfo.nickname"
                             :rules="nicknameRules"
                             required
               ></v-text-field>
               <v-text-field class="caption"
                             label="생년월일"
-                            v-model="birth"
+                            v-model="userInfo.birth"
                             :rules="birthRules"
                             required
               ></v-text-field>
-              <v-radio-group v-model="genderValue" row>
+              <v-radio-group v-model="userInfo.gender" row>
                 <v-radio
                   v-for="n in gender"
                   :key="n.value"
@@ -82,36 +82,48 @@
   export default {
     data() {
       return {
+        userInfo: {
+          email: '',
+          name: '',
+          pwd: '',
+          nickname: '',
+          birth: '',
+          gender: 'M',
+        },
         valid: false,
-        name: '',
         nameRules: [
           (v) => !!v || '이름이 필요합니다.',
         ],
-        password: '',
         passwordRules: [
           (v) => !!v || '비밀번호가 필요합니다.',
         ],
-        email: '',
         emailRules: [
           (v) => !!v || '이메일이 필요합니다.',
           (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 양식이 잘못되었습니다.'
         ],
-        nickname: '',
         nicknameRules: [],
-        birth: '',
         birthRules: [],
-        gender: [{value:1,label:'남성'},{value:2,label:'여성'}],
-        genderValue: 1
+        gender: [{value:'M',label:'남성'},{value:'F',label:'여성'}],
       }
     },
     methods: {
       submit() {
+        let userJson = JSON.stringify(this.userInfo);
         if (this.$refs.form.validate()) {
-          this.$refs.form.$el.submit()
+          const baseUrl = 'http://127.0.0.1:8080';
+          this.$http.post(`${baseUrl}/api/user/save`, userJson, {
+            headers : {
+              'Content-Type': 'application/json',
+            }
+          })
+            .then((result) => {
+              console.log(result);
+              this.$router.push("/");
+            })
+            .catch((e) => {
+              console.log(e);
+            })
         }
-      },
-      clear() {
-        this.$refs.form.reset()
       }
     },
     components: {
