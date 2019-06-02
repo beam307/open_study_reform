@@ -22,18 +22,18 @@
               ></v-text-field>
               <v-text-field class="caption"
                             label="비밀번호"
-                            v-model="userInfo.password"
+                            v-model="userInfo.pwd"
                             min="8"
                             type="password"
-                            :rules="passwordRules"
+                            :rules="pwdRules"
                             required
               ></v-text-field>
               <v-text-field class="caption"
                             label="비밀번호확인"
-                            v-model="userInfo.password"
+                            v-model="pwd_check"
                             min="8"
                             type="password"
-                            :rules="passwordRules"
+                            :rules="pwdCheckRules"
                             required
               ></v-text-field>
               <v-text-field class="caption"
@@ -90,12 +90,17 @@
           birth: '',
           gender: 'M',
         },
+        pwd_check: '',
         valid: false,
         nameRules: [
           (v) => !!v || '이름이 필요합니다.',
         ],
-        passwordRules: [
+        pwdRules: [
           (v) => !!v || '비밀번호가 필요합니다.',
+        ],
+        pwdCheckRules: [
+          (v) => !!v || '비밀번호가 필요합니다.',
+          (v) => v == this.userInfo.pwd || '비밀번호가 일치하지 않습니다.'
         ],
         emailRules: [
           (v) => !!v || '이메일이 필요합니다.',
@@ -110,7 +115,7 @@
       submit() {
         let userJson = JSON.stringify(this.userInfo);
         if (this.$refs.form.validate()) {
-          const baseUrl = 'http://127.0.0.1:8080';
+          const baseUrl = 'http://localhost:8080';
           this.$http.post(`${baseUrl}/api/user/save`, userJson, {
             headers : {
               'Content-Type': 'application/json',
