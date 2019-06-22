@@ -1,5 +1,7 @@
-package org.project.study.user;
+package org.project.study.service;
 
+import org.project.study.repository.UserRepository;
+import org.project.study.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

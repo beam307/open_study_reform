@@ -1,5 +1,7 @@
-package org.project.study.user;
+package org.project.study.controller;
 
+import org.project.study.model.User;
+import org.project.study.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

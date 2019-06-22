@@ -115,8 +115,7 @@
       submit() {
         let userJson = JSON.stringify(this.userInfo);
         if (this.$refs.form.validate()) {
-          const baseUrl = 'http://localhost:8080';
-          this.$http.post(`${baseUrl}/api/user/save`, userJson, {
+          this.$http.post(`${process.env.JAVA_API_URL}/api/user/save`, userJson, {
             headers : {
               'Content-Type': 'application/json',
             }

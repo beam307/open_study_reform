@@ -12,20 +12,25 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <step1></step1>
-          <v-btn color="secondary" @click="step++">다음</v-btn>
-          <v-btn flat to="/study/list">취소</v-btn>
+          <v-layout justify-end>
+            <v-btn color="secondary" @click="step++">다음</v-btn>
+          </v-layout>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <step2></step2>
-          <v-btn color="secondary" @click="step++">다음</v-btn>
-          <v-btn flat to="/study/list">취소</v-btn>
+          <v-layout justify-space-between>
+            <v-btn color="secondary" @click="step--">이전</v-btn>
+            <v-btn color="secondary" @click="step++">다음</v-btn>
+          </v-layout>
         </v-stepper-content>
 
         <v-stepper-content step="3">
           <step3></step3>
-          <v-btn color="secondary" @click="step = 1">완료</v-btn>
-          <v-btn flat to="/study/list">취소</v-btn>
+          <v-layout justify-space-between>
+            <v-btn color="secondary" @click="step--">이전</v-btn>
+            <v-btn color="secondary" @click="step = 1">완료</v-btn>
+          </v-layout>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>

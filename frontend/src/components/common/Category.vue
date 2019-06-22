@@ -4,8 +4,9 @@
     <v-tab-item v-for="category in categories" :key="category.title">
       <v-card flat>
         <v-layout wrap>
-          <v-flex xs12 sm4 v-for="item in category.items" :key="item">
-            <v-checkbox :label="item"></v-checkbox>
+          <v-flex xs12 sm4 v-for="item in category.items" :key="item.id">
+            <v-checkbox :label="item.name" :disabled="disabled(item.id)" :value="item.id"
+                        v-model="checked"></v-checkbox>
           </v-flex>
         </v-layout>
       </v-card>
@@ -14,16 +15,32 @@
 </template>
 
 <script>
+  import _ from 'lodash'
+
   export default {
     data() {
       return {
-        categories: [
-          {title: '영어', items: ['토익', '토플', '공무원', '회화', '독해']},
-          {title: '외국어', items: ['중국어', '일본어', '독일어', '프랑스어', '스페인어']},
-          {title: 'IT', items: ['웹개발', '게임개발', '자격증', '프론트엔드', '백엔드']},
-          {title: '교양', items: ['피아노', '보컬']},
-          {title: '공무원', items: ['행정직', '사회복지직', '운전직', '세무직', '9급', '7급', '임용고시']},
-        ]
+        categories: [],
+        checked: [],
+      }
+    },
+    created() {
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/category`)
+        .then((result) => {
+          this.categories = _.values(_.mapValues(result.data, (i) => {
+            return {
+              title: i[0].title,
+              items: i
+            }
+          }));
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+    },
+    methods: {
+      disabled(id) {
+        return this.checked.length>=5 && !this.checked.includes(id)
       }
     }
   }
