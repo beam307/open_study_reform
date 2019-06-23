@@ -7,37 +7,37 @@
       <v-flex xs8 sm10 px-2 py-1>
         <v-layout wrap>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="10"
                         :label="'10대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="20"
                         :label="'20대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="30"
                         :label="'30대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="40"
                         :label="'40대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="50"
                         :label="'50대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="age"
+            <v-checkbox v-model="targetAge"
                         value="0"
                         :label="'무관'"
             ></v-checkbox>
@@ -77,9 +77,10 @@
       </v-flex>
       <v-flex xs10 px-2 py-1>
         <v-select
-          :items="weekday"
+          :items="weekdays"
           label="요일"
           solo
+          v-model="week"
         ></v-select>
       </v-flex>
     </v-layout>
@@ -154,8 +155,9 @@
       </v-flex>
       <v-flex xs10 px-2 py-1>
         <v-text-field
-          v-model="count"
+          v-model="maxMemberCnt"
           class="mt-1 pt-0"
+          v-on:click="test"
         ></v-text-field>
       </v-flex>
     </v-layout>
@@ -164,24 +166,38 @@
 
 <script>
   import Category from '../../../components/common/Category'
+  import * as moment from 'moment'
 
   export default {
     data() {
       return {
-        age: [],
-        count: 0,
-        weekday: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-        startDate: new Date().toISOString().substr(0, 10),
-        startDatePicker: false,
+        targetAge: [],
+        startDate: moment(new Date).format('YYYY-MM-DD'),
+        week: null,
         startTime: null,
-        startTimePicker: false,
         endTime: null,
+        maxMemberCnt: 0,
+
+        startDatePicker: false,
+        weekdays: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+        startTimePicker: false,
         endTimePicker: false,
       }
     },
     components: {
       Category
     },
+    methods: {
+      test() {
+        console.log(this.targetAge);
+        console.log(this.startDate);
+        console.log(this.week);
+        console.log(this.startTime);
+        console.log(this.endTime);
+        console.log(this.maxMemberCnt);
+        console.log("=============")
+      }
+    }
   }
 </script>
 

@@ -9,6 +9,7 @@
           outline
           rows="10"
           no-resize
+          v-model="introduce"
         ></v-textarea>
       </v-flex>
     </v-layout>
@@ -28,7 +29,12 @@
 
   export default {
     data() {
-      return {}
+      return {
+        introduce: '',
+      }
+    },
+    methods: {
+
     },
     components: {
       imageUpload

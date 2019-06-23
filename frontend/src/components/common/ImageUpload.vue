@@ -1,14 +1,11 @@
 <template>
   <div>
     <file-pond
-      name="image_upload"
-      ref="pond"
       label-idle="드래그 또는 클릭하세요.(최대 4개)"
       allow-multiple="true"
       maxFiles="4"
-      accepted-file-types="image/jpeg, image/png"
-      v-bind:files="thumbnail"
-      v-on:init="handleFilePondInit"/>
+      :server="{process, revert}"
+      accepted-file-types="image/*"/>
   </div>
 </template>
 
@@ -22,13 +19,43 @@
   export default {
     data: function () {
       return {
-        thumbnail: [],
+        saveTempURL: `${process.env.JAVA_API_URL}/api/study/saveTempImage`,
+        deleteTempURL: `${process.env.JAVA_API_URL}/api/study/deleteTempImage`,
+        images: [],
       };
     },
     methods: {
-      handleFilePondInit: function () {
-        console.log('FilePond has initialized');
-      }
+      process(fieldName, file, metadata, load, error, progress, abort) {
+        const formData = new FormData();
+        formData.append('studyImage', file, file.name);
+        let config = {
+          onUploadProgress: e => {
+            progress(true, e.loaded, e.total);
+          }
+        }
+        this.$http.post(this.saveTempURL, formData, config)
+          .then((result) => {
+            let fileName = result.data;
+            load(fileName);
+            this.images.push(fileName);
+          })
+          .catch((e) => {
+            console.log(e);
+            abort();
+          });
+      },
+      revert(uniqueFileId, load, error) {
+        this.$http.post(this.deleteTempURL, {fileName: uniqueFileId})
+          .then((result) => {
+            let index = this.images.indexOf(uniqueFileId);
+            this.images.splice(index, 1);
+            load();
+          })
+          .catch((e) => {
+            console.log(e);
+            error();
+          });
+      },
     },
     components: {
       FilePond

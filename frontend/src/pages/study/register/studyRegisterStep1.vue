@@ -6,7 +6,7 @@
         <v-subheader style="align-items:flex-end">스터디명</v-subheader>
       </v-flex>
       <v-flex xs8 sm10 px-2 py-1>
-        <v-text-field label="스터디명" v-on:click="test"></v-text-field>
+        <v-text-field label="스터디명" v-model="name"></v-text-field>
       </v-flex>
     </v-layout>
     <v-layout wrap>
@@ -45,6 +45,7 @@
         MinorRegionAll: [],
         majorRegion: 0,
         minorRegion: 0,
+        name: '',
       }
     },
     created() {
@@ -59,19 +60,17 @@
         })
         .catch((e) => {
           console.log(e);
-        })
+        });
+
       this.$http.get(`${process.env.JAVA_API_URL}/api/study/minorRegion`)
         .then((result) => {
           this.MinorRegionAll = result.data;
         })
         .catch((e) => {
           console.log(e);
-        })
+        });
     },
     methods: {
-      test() {
-        console.log(this.majorRegion, this.minorRegion);
-      },
       minorRegionChoice(code) {
         if (code == 40) {
           this.minorRegions = [{text: '전국', value: 4000}];
