@@ -11,14 +11,14 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <step1></step1>
+          <studyRegisterStep1></studyRegisterStep1>
           <v-layout justify-end>
             <v-btn color="secondary" @click="step++">다음</v-btn>
           </v-layout>
         </v-stepper-content>
 
         <v-stepper-content step="2">
-          <step2></step2>
+          <studyRegisterStep2></studyRegisterStep2>
           <v-layout justify-space-between>
             <v-btn color="secondary" @click="step--">이전</v-btn>
             <v-btn color="secondary" @click="step++">다음</v-btn>
@@ -26,7 +26,7 @@
         </v-stepper-content>
 
         <v-stepper-content step="3">
-          <step3></step3>
+          <studyRegisterStep3></studyRegisterStep3>
           <v-layout justify-space-between>
             <v-btn color="secondary" @click="step--">이전</v-btn>
             <v-btn color="secondary" @click="step = 1">완료</v-btn>
@@ -38,9 +38,9 @@
 </template>
 
 <script>
-  import step1 from './studyRegisterStep1'
-  import step2 from './studyRegisterStep2'
-  import step3 from './studyRegisterStep3'
+  import studyRegisterStep1 from './studyRegisterStep1'
+  import studyRegisterStep2 from './studyRegisterStep2'
+  import studyRegisterStep3 from './studyRegisterStep3'
 
   export default {
     data() {
@@ -49,9 +49,9 @@
       }
     },
     components: {
-      step1,
-      step2,
-      step3,
+      studyRegisterStep1,
+      studyRegisterStep2,
+      studyRegisterStep3,
     }
   }
 </script>

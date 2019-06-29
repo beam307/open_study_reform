@@ -3,7 +3,7 @@
     <Category></Category>
     <v-layout wrap>
       <v-flex xs4 sm2 px-2 py-1>
-        <v-subheader style="align-items:flex-end">스터디명</v-subheader>
+        <v-subheader style="align-items:flex-end" @click="test">스터디명</v-subheader>
       </v-flex>
       <v-flex xs8 sm10 px-2 py-1>
         <v-text-field label="스터디명" v-model="name"></v-text-field>
@@ -45,7 +45,6 @@
         MinorRegionAll: [],
         majorRegion: 0,
         minorRegion: 0,
-        name: '',
       }
     },
     created() {
@@ -83,6 +82,19 @@
             value: r.id
           }
         });
+      },
+      test() {
+        console.log(this.$store.state.name);
+      }
+    },
+    computed: {
+      name: {
+        get () {
+          return this.$store.state.name
+        },
+        set (value) {
+          this.$store.commit('SET_NAME', value)
+        }
       }
     },
     components: {
