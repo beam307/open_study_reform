@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import studyModule from './studyModule';
 
 Vue.use(Vuex);
-
-import studyModule from './studyModule';
 
 export default new Vuex.Store({
 

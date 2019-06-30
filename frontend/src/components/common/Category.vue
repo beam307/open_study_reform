@@ -21,7 +21,6 @@
     data() {
       return {
         categories: [],
-        checked: [],
       }
     },
     created() {
@@ -41,6 +40,16 @@
     methods: {
       disabled(id) {
         return this.checked.length>=5 && !this.checked.includes(id)
+      }
+    },
+    computed: {
+      checked: {
+        get () {
+          return this.$store.state.study.categories
+        },
+        set (value) {
+          this.$store.commit('study/setCategories', value)
+        }
       }
     }
   }

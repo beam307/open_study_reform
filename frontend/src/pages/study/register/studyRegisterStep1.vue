@@ -43,8 +43,6 @@
         majorRegions: [],
         minorRegions: [],
         MinorRegionAll: [],
-        majorRegion: 0,
-        minorRegion: 0,
       }
     },
     created() {
@@ -84,16 +82,32 @@
         });
       },
       test() {
-        console.log(this.$store.state.name);
+        console.log(this.$store.state.study);
       }
     },
     computed: {
       name: {
         get () {
-          return this.$store.state.name
+          return this.$store.state.study.name
         },
         set (value) {
-          this.$store.commit('SET_NAME', value)
+          this.$store.commit('study/setName', value)
+        }
+      },
+      majorRegion: {
+        get () {
+          return this.$store.state.study.majorRegion
+        },
+        set (value) {
+          this.$store.commit('study/setMajorRegion', value)
+        }
+      },
+      minorRegion: {
+        get () {
+          return this.$store.state.study.minorRegion
+        },
+        set (value) {
+          this.$store.commit('study/setMinorRegion', value)
         }
       }
     },
