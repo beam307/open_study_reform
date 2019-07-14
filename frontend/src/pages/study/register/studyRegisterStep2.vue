@@ -86,9 +86,9 @@
     </v-layout>
     <v-layout wrap>
       <v-flex xs2 px-2 py-1>
-        <v-subheader>시간대</v-subheader>
+        <v-subheader  @click="test">시간대</v-subheader>
       </v-flex>
-      <v-flex xs5 px-2 py-1>
+      <v-flex xs4 px-2 py-1>
         <v-menu
           ref="startTimeMenu"
           v-model="startTimePicker"
@@ -118,7 +118,7 @@
           ></v-time-picker>
         </v-menu>
       </v-flex>
-      <v-flex xs5 px-2 py-1>
+      <v-flex xs4 px-2 py-1>
         <v-menu
           ref="endTimeMenu"
           v-model="endTimePicker"
@@ -148,6 +148,17 @@
           ></v-time-picker>
         </v-menu>
       </v-flex>
+      <v-flex xs2>
+        <v-btn color="secondary" @click="addTime()">추가</v-btn>
+      </v-flex>
+    </v-layout>
+    <v-layout wrap>
+      <v-flex xs2 px-2 py-1>
+        <v-subheader>선택된시간</v-subheader>
+      </v-flex>
+      <v-flex xs10 px-2 py-1>
+        <v-subheader v-for="(time, index) in times" :key="index">{{time}}</v-subheader>
+      </v-flex>
     </v-layout>
     <v-layout wrap>
       <v-flex xs2 px-2 py-1>
@@ -157,7 +168,6 @@
         <v-text-field
           v-model="maxMemberCnt"
           class="mt-1 pt-0"
-          v-on:click="test"
         ></v-text-field>
       </v-flex>
     </v-layout>
@@ -166,17 +176,13 @@
 
 <script>
   import Category from '../../../components/common/Category'
-  import * as moment from 'moment'
 
   export default {
     data() {
       return {
-        targetAge: [],
-        startDate: moment(new Date).format('YYYY-MM-DD'),
         week: null,
         startTime: null,
         endTime: null,
-        maxMemberCnt: 0,
 
         startDatePicker: false,
         weekdays: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
@@ -188,15 +194,49 @@
       Category
     },
     methods: {
+      addTime() {
+        if(this.week != null && this.startTime != null && this.endTime != null) {
+          let time = this.$store.state.study.meta.time;
+          let value = `${this.startTime} ~ ${this.endTime} ${this.week}`;
+          time.push(value);
+          this.$store.commit('study/setAge', time);
+        }
+
+      },
       test() {
-        console.log(this.targetAge);
-        console.log(this.startDate);
-        console.log(this.week);
-        console.log(this.startTime);
-        console.log(this.endTime);
-        console.log(this.maxMemberCnt);
-        console.log("=============")
+        console.log(this.$store.state.study);
       }
+    },
+    computed: {
+      startDate: {
+        get () {
+          return this.$store.state.study.startDate
+        },
+        set (value) {
+          this.$store.commit('study/setStartDate', value)
+        }
+      },
+      targetAge: {
+        get () {
+          return this.$store.state.study.meta.age;
+        },
+        set (value) {
+          this.$store.commit('study/setAge', value)
+        }
+      },
+      maxMemberCnt: {
+        get () {
+          return this.$store.state.study.maxMemberCnt;
+        },
+        set (value) {
+          this.$store.commit('study/setMaxMemberCnt', value)
+        }
+      },
+      times: {
+        get () {
+          return this.$store.state.study.meta.time;
+        }
+      },
     }
   }
 </script>

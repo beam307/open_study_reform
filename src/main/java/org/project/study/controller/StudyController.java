@@ -3,6 +3,7 @@ package org.project.study.controller;
 import org.project.study.model.Category;
 import org.project.study.model.MajorRegion;
 import org.project.study.model.MinorRegion;
+import org.project.study.model.Study;
 import org.project.study.service.StudyService;
 import org.project.study.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,17 @@ public class StudyController {
 
     @Autowired
     private UploadService uploadService;
+
+    @PostMapping("/create")
+    public ResponseEntity<String> saveStudy(@RequestBody Study study) {
+        try {
+            studyService.insertStudy(study);
+
+           return ResponseEntity.ok("");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("");
+        }
+    }
 
     @GetMapping("/category")
     public Map<String, List<Category>> getCategoryList() {

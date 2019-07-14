@@ -18,7 +18,7 @@
         <v-subheader style="align-items:flex-end">이미지</v-subheader>
       </v-flex>
       <v-flex xs8 sm10 px-2 py-1 class="image-upload">
-        <image-upload></image-upload>
+        <image-upload :images="images"></image-upload>
       </v-flex>
     </v-layout>
   </v-card>
@@ -30,7 +30,6 @@
   export default {
     data() {
       return {
-        introduce: '',
       }
     },
     methods: {
@@ -38,6 +37,21 @@
     },
     components: {
       imageUpload
+    },
+    computed: {
+      introduce: {
+        get() {
+          return this.$store.state.study.introduce;
+        },
+        set(value) {
+          this.$store.commit('study/setIntroduce', value)
+        }
+      },
+      images: {
+        get() {
+          return this.$store.state.study.meta.images;
+        }
+      }
     }
   }
 </script>

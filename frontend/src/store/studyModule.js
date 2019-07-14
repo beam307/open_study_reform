@@ -9,11 +9,11 @@ export default {
     meta: {
       age: [],
       time: [],
+      images:[],
     },
     startDate: null,
     maxMemberCnt: 0,
     introduce: '',
-    images: [],
   },
 
   getters: {
@@ -32,6 +32,15 @@ export default {
     meta(state) {
       return state.meta;
     },
+    age(state) {
+      return state.meta.age;
+    },
+    time(state) {
+      return state.meta.time;
+    },
+    images(state) {
+      return state.meta.images;
+    },
     startDate(state) {
       return state.startDate;
     },
@@ -40,9 +49,6 @@ export default {
     },
     introduce(state) {
       return state.introduce;
-    },
-    images(state) {
-      return state.images;
     },
   },
 
@@ -62,6 +68,12 @@ export default {
     setMeta(state, payload) {
       state.meta = payload;
     },
+    setAge(state, payload) {
+      state.meta.age = payload;
+    },
+    setTime(state, payload) {
+      state.meta.time = payload;
+    },
     setStartDate(state, payload) {
       state.startDate = payload;
     },
@@ -69,10 +81,10 @@ export default {
       state.maxMemberCnt = payload;
     },
     setIntroduce(state, payload) {
-      state.intoduce = payload;
+      state.introduce = payload;
     },
     setImages(state, payload) {
-      state.images = payload;
+      state.meta.images = payload;
     },
   }
 

@@ -1,12 +1,8 @@
 package org.project.study.service;
 
 import com.google.common.collect.ImmutableList;
-import org.project.study.model.Category;
-import org.project.study.model.MajorRegion;
-import org.project.study.model.MinorRegion;
-import org.project.study.repository.CategoryRepository;
-import org.project.study.repository.MajorRegionRepository;
-import org.project.study.repository.MinorRegionRepository;
+import org.project.study.model.*;
+import org.project.study.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +22,22 @@ public class StudyService {
     @Autowired
     MinorRegionRepository minorRegionRepository;
 
+    @Autowired
+    StudyRepository studyRepository;
+
+    @Autowired
+    StudyCategoryRepository studyCategoryRepository;
+
+    public void insertStudy(Study study) {
+        studyRepository.saveAndFlush(study);
+        Long studyId = study.getId();
+
+        List<StudyCategory> categories = study.getCategories().stream()
+                .map(c -> new StudyCategory(studyId, c))
+                .collect(Collectors.toList());
+
+        studyCategoryRepository.saveAll(categories);
+    }
 
     public Map<String, List<Category>> getCategoryList() {
         List<Category> categories = categoryRepository.findAll();

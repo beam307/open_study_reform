@@ -29,7 +29,7 @@
           <StudyRegisterStep3></StudyRegisterStep3>
           <v-layout justify-space-between>
             <v-btn color="secondary" @click="step--">이전</v-btn>
-            <v-btn color="secondary" @click="step = 1">완료</v-btn>
+            <v-btn color="secondary" @click="createStudy">완료</v-btn>
           </v-layout>
         </v-stepper-content>
       </v-stepper-items>
@@ -52,6 +52,19 @@
       StudyRegisterStep1,
       StudyRegisterStep2,
       StudyRegisterStep3,
+    },
+    methods: {
+      createStudy() {
+        let study = _.cloneDeep(this.$store.state.study);
+        study.meta = JSON.stringify(this.$store.state.study.meta);
+        this.$http.post(`${process.env.JAVA_API_URL}/api/study/create`, study)
+          .then((result) => {
+            console.log(result);
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+      }
     }
   }
 </script>
