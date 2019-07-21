@@ -36,6 +36,22 @@ public class StudyController {
         }
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<Study>> studyList() {
+        return ResponseEntity.ok(studyService.getStudyList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Study> studyOne(@PathVariable Long id) {
+        Study study = studyService.getStudy(id);
+
+        if(study != null) {
+            return ResponseEntity.ok(studyService.getStudy(id));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/category")
     public Map<String, List<Category>> getCategoryList() {
         return studyService.getCategoryList();

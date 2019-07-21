@@ -25,42 +25,45 @@
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              NEW STUDY <router-link to="/study/list" class="more">더보기</router-link>
+              NEW STUDY
+              <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
           <v-layout wrap>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
+            <v-flex xs12 sm4 pa-2 mb-2 v-for="study in studies" :key="study.id">
+              <Thumbnail :study="study"></Thumbnail>
+            </v-flex>
           </v-layout>
         </div>
         <!--베스트스터디-->
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              BEST STUDY <router-link to="/study/list" class="more">더보기</router-link>
+              BEST STUDY
+              <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
           <v-layout wrap>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
+            <v-flex xs12 sm4 pa-2 mb-2 v-for="study in studies" :key="study.id">
+              <Thumbnail :study="study"></Thumbnail>
+            </v-flex>
           </v-layout>
         </div>
         <!--추천스터디-->
         <div class="container main-thumbnail">
           <div class="header">
             <h1>
-              RECOMMENDING STUDY <router-link to="/study/list" class="more">더보기</router-link>
+              RECOMMENDING STUDY
+              <router-link to="/study/list" class="more">더보기</router-link>
             </h1>
           </div>
           <h2 class="line"></h2>
           <v-layout wrap>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
-            <Thumbnail></Thumbnail>
+            <v-flex xs12 sm4 pa-2 mb-2 v-for="study in studies" :key="study.id">
+              <Thumbnail :study="study"></Thumbnail>
+            </v-flex>
           </v-layout>
         </div>
         <Footer/>
@@ -75,6 +78,23 @@
   import Thumbnail from '../components/common/Thumbnail'
 
   export default {
+
+    data() {
+      return {
+        studies: [],
+      }
+    },
+    created() {
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/list`)
+        .then((result) => {
+          this.studies = result.data;
+          this.studies.map(s => s.meta = JSON.parse(s.meta));
+          console.log(this.studies);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     components: {
       Header,
       Footer,
@@ -178,6 +198,7 @@
       font-size: 1.7em;
     }
   }
+
   @media (max-width: 600px) {
     .visual_contents h3 {
       font-size: 1em;
@@ -190,6 +211,7 @@
     .main-thumbnail h1 a {
       top: 15px;
     }
+
     #visual {
       height: 450px;
     }

@@ -4,7 +4,7 @@
       <v-card-text>
         <v-layout wrap>
           <v-flex sm9 xs8 pa-2>
-            <v-text-field height="36" autofocus label="검색어를 입력하세요."></v-text-field>
+            <v-text-field height="36" autofocus label="검색어를 입력하세요." v-model="keyword"></v-text-field>
           </v-flex>
           <v-flex sm3 xs4 pa-2>
             <v-btn block large type="submit">검색</v-btn>
@@ -13,14 +13,15 @@
         <v-layout wrap>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="majorRegion"
+              :items="majorRegions"
               label="지역 대분류"
               solo
+              @change="minorRegionChoice($event)"
             ></v-select>
           </v-flex>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="minorRegion"
+              :items="minorRegions"
               label="지역 소분류"
               solo
             ></v-select>
@@ -29,14 +30,15 @@
         <v-layout wrap>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="majorCategory"
+              :items="majorCategories"
               label="카테고리 대분류"
               solo
+              @change="minorCategoryChoice($event)"
             ></v-select>
           </v-flex>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="minorCategory"
+              :items="minorCategories"
               label="카테고리 소분류"
               solo
             ></v-select>
@@ -56,15 +58,9 @@
           </v-flex>
         </v-layout>
         <v-layout wrap>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
-          <Thumbnail></Thumbnail>
+          <v-flex xs12 sm4 pa-2 mb-2 v-for="study in studies" :key="study.id">
+            <Thumbnail :study="study"></Thumbnail>
+          </v-flex>
         </v-layout>
         <v-layout justify-center>
           <v-pagination
@@ -83,17 +79,90 @@
   export default {
     data() {
       return {
-        majorRegion: ['경기도'],
-        minorRegion: ['성남시'],
-        majorCategory: ['컴퓨터'],
-        minorCategory: ['웹개발'],
+        keyword: '',
+        majorRegions: [],
+        minorRegions: [],
+        minorRegionAll: [],
+        majorCategories: [],
+        minorCategories: [],
         filter: ['최신순', '인기순', '조회수'],
-        page: 1
+        page: 1,
+        studies: [],
       }
     },
     components: {
       Thumbnail
+    },
+    created() {
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/category`)
+        .then((result) => {
+          this.majorCategories = _.values(_.mapValues(result.data, (i) => {
+            return {
+              text: i[0].title,
+              items: i
+            }
+          }));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/majorRegion`)
+        .then((result) => {
+          this.majorRegions = result.data.map(r => {
+            return {
+              text: r.name,
+              value: r.id
+            }
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/minorRegion`)
+        .then((result) => {
+          this.minorRegionAll = result.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+      this.$http.get(`${process.env.JAVA_API_URL}/api/study/list`)
+        .then((result) => {
+          this.studies = result.data;
+          this.studies.map(s => s.meta = JSON.parse(s.meta));
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$route.router.go('/');
+        });
+
+    },
+    methods: {
+      minorCategoryChoice(major) {
+        let majorCategory = _.find(this.majorCategories, m => m.text == major);
+        this.minorCategories = majorCategory.items.map(c => {
+          return {
+            text: c.name,
+            value: c.id
+          }
+        });
+      },
+      minorRegionChoice(code) {
+        if (code == 40) {
+          this.minorRegions = [{text: '전국', value: 4000}];
+          return;
+        }
+        this.minorRegions = this.minorRegionAll[code].map(r => {
+          return {
+            text: r.name,
+            value: r.id
+          }
+        });
+      },
     }
+
   }
 </script>
 

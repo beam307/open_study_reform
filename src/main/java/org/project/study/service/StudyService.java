@@ -59,5 +59,13 @@ public class StudyService {
 
         return majorRegions;
     }
+
+    public List<Study> getStudyList() {
+        return studyRepository.findAll();
+    }
+
+    public Study getStudy(Long id) {
+        return studyRepository.findById(id).orElse(null);
+    }
 }
 

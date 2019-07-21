@@ -42,7 +42,7 @@
       return {
         majorRegions: [],
         minorRegions: [],
-        MinorRegionAll: [],
+        minorRegionAll: [],
       }
     },
     created() {
@@ -61,7 +61,7 @@
 
       this.$http.get(`${process.env.JAVA_API_URL}/api/study/minorRegion`)
         .then((result) => {
-          this.MinorRegionAll = result.data;
+          this.minorRegionAll = result.data;
         })
         .catch((e) => {
           console.log(e);
@@ -73,7 +73,7 @@
           this.minorRegions = [{text: '전국', value: 4000}];
           return;
         }
-        let minor = this.MinorRegionAll[code];
+        let minor = this.minorRegionAll[code];
         this.minorRegions = minor.map(r => {
           return {
             text: r.name,
