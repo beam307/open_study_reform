@@ -86,7 +86,7 @@
     </v-layout>
     <v-layout wrap>
       <v-flex xs2 px-2 py-1>
-        <v-subheader  @click="test">시간대</v-subheader>
+        <v-subheader>시간대</v-subheader>
       </v-flex>
       <v-flex xs4 px-2 py-1>
         <v-menu
@@ -175,70 +175,67 @@
 </template>
 
 <script>
-  import Category from '../../../components/common/Category'
+    import Category from '../../../components/common/Category'
+    import {mapGetters, mapMutations} from 'vuex'
 
-  export default {
-    data() {
-      return {
-        week: null,
-        startTime: null,
-        endTime: null,
+    export default {
+        data() {
+            return {
+                week: null,
+                startTime: null,
+                endTime: null,
 
-        startDatePicker: false,
-        weekdays: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-        startTimePicker: false,
-        endTimePicker: false,
-      }
-    },
-    components: {
-      Category
-    },
-    methods: {
-      addTime() {
-        if(this.week != null && this.startTime != null && this.endTime != null) {
-          let time = this.$store.state.study.meta.time;
-          let value = `${this.startTime} ~ ${this.endTime} ${this.week}`;
-          time.push(value);
-          this.$store.commit('study/setAge', time);
-        }
+                startDatePicker: false,
+                weekdays: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+                startTimePicker: false,
+                endTimePicker: false,
+            }
+        },
+        components: {
+            Category
+        },
+        methods: {
+            ...mapMutations({ages: 'study/setTime'}),
+            addTime() {
+                if (this.week != null && this.startTime != null && this.endTime != null) {
+                    let time = this.times;
+                    let value = `${this.startTime} ~ ${this.endTime} ${this.week}`;
+                    time.push(value);
+                    this.ages(time);
+                }
 
-      },
-      test() {
-        console.log(this.$store.state.study);
-      }
-    },
-    computed: {
-      startDate: {
-        get () {
-          return this.$store.state.study.startDate
+            }
+
         },
-        set (value) {
-          this.$store.commit('study/setStartDate', value)
+        computed: {
+            ...mapGetters({times: 'study/time'}),
+
+            startDate: {
+                get() {
+                    return this.$store.state.study.startDate
+                },
+                set(value) {
+                    this.$store.commit('study/setStartDate', value)
+                }
+            },
+            targetAge: {
+                get() {
+                    return this.$store.state.study.meta.age;
+                },
+                set(value) {
+                    this.$store.commit('study/setAge', value)
+                }
+            },
+            maxMemberCnt: {
+                get() {
+                    return this.$store.state.study.maxMemberCnt;
+                },
+                set(value) {
+                    this.$store.commit('study/setMaxMemberCnt', value)
+                }
+            }
         }
-      },
-      targetAge: {
-        get () {
-          return this.$store.state.study.meta.age;
-        },
-        set (value) {
-          this.$store.commit('study/setAge', value)
-        }
-      },
-      maxMemberCnt: {
-        get () {
-          return this.$store.state.study.maxMemberCnt;
-        },
-        set (value) {
-          this.$store.commit('study/setMaxMemberCnt', value)
-        }
-      },
-      times: {
-        get () {
-          return this.$store.state.study.meta.time;
-        }
-      },
     }
-  }
 </script>
 
 <style scoped>

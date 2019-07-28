@@ -27,7 +27,7 @@ export default new Router({
     {
       path: '/study', component: Study,
       children: [{
-        path: 'list', component: StudyList,
+        path: 'list', name: 'studyList',  component: StudyList,
       }, {
         path: 'register', component: StudyRegister,
       }, {

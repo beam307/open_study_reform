@@ -25,35 +25,29 @@
 </template>
 
 <script>
-  import imageUpload from '../../../components/common/ImageUpload';
+    import imageUpload from '../../../components/common/ImageUpload';
+    import {mapGetters} from 'vuex'
 
-  export default {
-    data() {
-      return {
-      }
-    },
-    methods: {
-
-    },
-    components: {
-      imageUpload
-    },
-    computed: {
-      introduce: {
-        get() {
-          return this.$store.state.study.introduce;
+    export default {
+        data() {
+            return {}
         },
-        set(value) {
-          this.$store.commit('study/setIntroduce', value)
+        methods: {},
+        components: {
+            imageUpload
+        },
+        computed: {
+            ...mapGetters({images: 'study/images'}),
+            introduce: {
+                get() {
+                    return this.$store.state.study.introduce;
+                },
+                set(value) {
+                    this.$store.commit('study/setIntroduce', value)
+                }
+            }
         }
-      },
-      images: {
-        get() {
-          return this.$store.state.study.meta.images;
-        }
-      }
     }
-  }
 </script>
 
 <style scoped>

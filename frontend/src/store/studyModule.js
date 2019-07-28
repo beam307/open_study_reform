@@ -9,7 +9,7 @@ export default {
     meta: {
       age: [],
       time: [],
-      images:[],
+      images: [],
     },
     startDate: null,
     maxMemberCnt: 0,
@@ -17,73 +17,73 @@ export default {
   },
 
   getters: {
-    name(state) {
+    name: function (state) {
       return state.name;
     },
-    majorRegion(state) {
+    majorRegion: function (state) {
       return state.majorRegion;
     },
-    minorRegion(state) {
+    minorRegion: function (state) {
       return state.minorRegion;
     },
-    categories(state) {
+    categories: function (state) {
       return state.categories;
     },
-    meta(state) {
+    meta: function (state) {
       return state.meta;
     },
-    age(state) {
+    age: function (state) {
       return state.meta.age;
     },
-    time(state) {
+    time: function (state) {
       return state.meta.time;
     },
-    images(state) {
+    images: function (state) {
       return state.meta.images;
     },
-    startDate(state) {
+    startDate: function (state) {
       return state.startDate;
     },
-    maxMemberCnt(state) {
+    maxMemberCnt: function (state) {
       return state.maxMemberCnt;
     },
-    introduce(state) {
+    introduce: function (state) {
       return state.introduce;
     },
   },
 
   mutations: {
-    setName(state, payload) {
+    setName: (state, payload) => {
       state.name = payload;
     },
-    setMajorRegion(state, payload) {
+    setMajorRegion: (state, payload) => {
       state.majorRegion = payload;
     },
-    setMinorRegion(state, payload) {
+    setMinorRegion: (state, payload) => {
       state.minorRegion = payload;
     },
-    setCategories(state, payload) {
+    setCategories: (state, payload) => {
       state.categories = payload;
     },
-    setMeta(state, payload) {
+    setMeta: (state, payload) => {
       state.meta = payload;
     },
-    setAge(state, payload) {
+    setAge: (state, payload) => {
       state.meta.age = payload;
     },
-    setTime(state, payload) {
+    setTime: (state, payload) => {
       state.meta.time = payload;
     },
-    setStartDate(state, payload) {
+    setStartDate: (state, payload) => {
       state.startDate = payload;
     },
-    setMaxMemberCnt(state, payload) {
+    setMaxMemberCnt: (state, payload) => {
       state.maxMemberCnt = payload;
     },
-    setIntroduce(state, payload) {
+    setIntroduce: (state, payload) => {
       state.introduce = payload;
     },
-    setImages(state, payload) {
+    setImages: (state, payload) => {
       state.meta.images = payload;
     },
   }

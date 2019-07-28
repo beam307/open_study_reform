@@ -38,35 +38,41 @@
 </template>
 
 <script>
-  import StudyRegisterStep1 from './studyRegisterStep1'
-  import StudyRegisterStep2 from './studyRegisterStep2'
-  import StudyRegisterStep3 from './studyRegisterStep3'
+    import StudyRegisterStep1 from './studyRegisterStep1'
+    import StudyRegisterStep2 from './studyRegisterStep2'
+    import StudyRegisterStep3 from './studyRegisterStep3'
+    import {mapGetters, mapState} from 'vuex'
 
-  export default {
-    data() {
-      return {
-        step: 0,
-      }
-    },
-    components: {
-      StudyRegisterStep1,
-      StudyRegisterStep2,
-      StudyRegisterStep3,
-    },
-    methods: {
-      createStudy() {
-        let study = _.cloneDeep(this.$store.state.study);
-        study.meta = JSON.stringify(this.$store.state.study.meta);
-        this.$http.post(`${process.env.JAVA_API_URL}/api/study/create`, study)
-          .then((result) => {
-            console.log(result);
-          })
-          .catch((e) => {
-            console.log(e);
-          })
-      }
+    export default {
+        data() {
+            return {
+                step: 0,
+            }
+        },
+        components: {
+            StudyRegisterStep1,
+            StudyRegisterStep2,
+            StudyRegisterStep3,
+        },
+        computed: {
+            ...mapGetters({meta: 'study/meta'}),
+            ...mapState(['study'])
+        },
+        methods: {
+            createStudy() {
+                let study = _.cloneDeep(this.study);
+                study.meta = JSON.stringify(this.meta);
+                this.$http.post(`${process.env.JAVA_API_URL}/api/study/create`, study)
+                    .then((result) => {
+                        console.log(result);
+                        this.$router.push({name:'studyList'});
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    })
+            }
+        }
     }
-  }
 </script>
 
 <style scoped>

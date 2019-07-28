@@ -14,7 +14,7 @@ public class UploadService {
 
         try {
             if (multipartFile != null) {
-                String filePath = "C:/Users/KimChanHee/IdeaProjects/study/frontend/src/assets/temp";
+                String filePath = "C:/Users/KimChanHee/IdeaProjects/study/frontend/src/assets/temp/";
                 String OriginFileName = multipartFile.getOriginalFilename();
                 String randomFileName = RandomUtil.randomFileName();
                 String replaceFileName = randomFileName + "_" + OriginFileName;
@@ -36,7 +36,7 @@ public class UploadService {
         if (fileName == null) {
             return 0;
         }
-        String filePath = "C:/Users/KimChanHee/IdeaProjects/study/frontend/src/assets/temp";
+        String filePath = "C:/Users/KimChanHee/IdeaProjects/study/frontend/src/assets/temp/";
         String deleteFileName = fileName;
         String fullFilePath = filePath + deleteFileName;
         System.out.println(fileName);
