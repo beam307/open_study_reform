@@ -45,11 +45,12 @@ public class StudyController {
     public ResponseEntity<Study> studyOne(@PathVariable Long id) {
         Study study = studyService.getStudy(id);
 
-        if(study != null) {
-            return ResponseEntity.ok(studyService.getStudy(id));
-        } else {
+        if(study == null) {
             return ResponseEntity.notFound().build();
         }
+        
+
+        return ResponseEntity.ok(studyService.getStudy(id));
     }
 
     @GetMapping("/category")

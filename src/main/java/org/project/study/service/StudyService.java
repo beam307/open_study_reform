@@ -1,6 +1,5 @@
 package org.project.study.service;
 
-import com.google.common.collect.ImmutableList;
 import org.project.study.model.*;
 import org.project.study.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class StudyService {
         studyRepository.saveAndFlush(study);
         Long studyId = study.getId();
 
-        List<StudyCategory> categories = study.getCategories().stream()
+        List<StudyCategory> categories = study.getCategoryIds().stream()
                 .map(c -> new StudyCategory(studyId, c))
                 .collect(Collectors.toList());
 

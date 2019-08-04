@@ -1,7 +1,5 @@
-export default {
-  namespaced: true,
-
-  state: {
+const study = () => {
+  return {
     name: '',
     majorRegion: 0,
     minorRegion: 0,
@@ -13,8 +11,14 @@ export default {
     },
     startDate: null,
     maxMemberCnt: 0,
-    introduce: '',
-  },
+    introduce: ''
+  }
+};
+
+export default {
+  namespaced: true,
+
+  state: study(),
 
   getters: {
     name: function (state) {
@@ -86,6 +90,9 @@ export default {
     setImages: (state, payload) => {
       state.meta.images = payload;
     },
+    resetState: (state) => {
+      Object.assign(state, study());
+    }
   }
 
 }

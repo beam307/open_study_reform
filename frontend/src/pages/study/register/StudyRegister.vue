@@ -41,7 +41,7 @@
     import StudyRegisterStep1 from './studyRegisterStep1'
     import StudyRegisterStep2 from './studyRegisterStep2'
     import StudyRegisterStep3 from './studyRegisterStep3'
-    import {mapGetters, mapState} from 'vuex'
+    import {mapGetters, mapState, mapMutations} from 'vuex'
 
     export default {
         data() {
@@ -59,12 +59,14 @@
             ...mapState(['study'])
         },
         methods: {
+            ...mapMutations({resetStudy: 'study/resetState'}),
+
             createStudy() {
                 let study = _.cloneDeep(this.study);
                 study.meta = JSON.stringify(this.meta);
                 this.$http.post(`${process.env.JAVA_API_URL}/api/study/create`, study)
                     .then((result) => {
-                        console.log(result);
+                        this.resetStudy();
                         this.$router.push({name:'studyList'});
                     })
                     .catch((e) => {

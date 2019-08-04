@@ -31,7 +31,7 @@ export default new Router({
       }, {
         path: 'register', component: StudyRegister,
       }, {
-        path: ':id', component: StudyView,
+        path: ':id', name: 'studyView', component: StudyView,
       }]
     },
     {path: '*', redirect: '/'}

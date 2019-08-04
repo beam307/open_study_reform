@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -25,10 +26,10 @@ public class Study {
     private String name;
 
     @Column(name = "major_region")
-    private Integer majorRegion;
+    private Integer majorRegionId;
 
     @Column(name = "minor_region")
-    private Integer minorRegion;
+    private Integer minorRegionId;
 
     @Column(name = "study_writer_id")
     private Long studyWriterId;
@@ -57,7 +58,24 @@ public class Study {
     private Integer status;
 
     @Transient
-    private List<Integer> categories;
+    private List<Integer> categoryIds;
+
+    @ManyToMany
+    @JoinTable(
+            name = "study_category",
+            joinColumns = @JoinColumn(name = "study_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @BatchSize(size = 5)
+    private List<Category> categories;
+
+    @OneToOne
+    @JoinColumn(name="major_region", insertable = false, updatable = false)
+    private MajorRegion majorRegion;
+
+    @OneToOne
+    @JoinColumn(name="minor_region", insertable = false, updatable = false)
+    private MinorRegion minorRegion;
 
     @PrePersist
     public void prePersist() {
