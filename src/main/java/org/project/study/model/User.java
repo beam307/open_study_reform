@@ -28,4 +28,6 @@ public class User {
     private Integer birth;
 
     private String gender;
+
+    private Integer admin;
 }

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-img :src="require(`../../assets/temp/${study.meta.images[0]}`)" contain max-width="300" max-height="150"></v-img>
+    <v-img :src="require(`@/assets/temp/${study.meta.images[0]}`)" contain max-width="300" max-height="150"></v-img>
     <v-card-title primary-title>
       {{study.name}}
     </v-card-title>
