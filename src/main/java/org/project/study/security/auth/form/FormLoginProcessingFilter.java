@@ -1,9 +1,8 @@
-package org.project.study.security.auth.ajax;
+package org.project.study.security.auth.form;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.project.study.security.exception.AuthMethodNotSupportedException;
-import org.project.study.util.WebUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
-    private static Logger logger = LoggerFactory.getLogger(AjaxLoginProcessingFilter.class);
+public class FormLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
+    private static Logger logger = LoggerFactory.getLogger(FormLoginProcessingFilter.class);
 
     private AuthenticationSuccessHandler successHandler;
 
@@ -33,7 +32,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     @Autowired
     private ObjectMapper objectMapper;
 
-    public AjaxLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler,
+    public FormLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler,
                                      AuthenticationFailureHandler failureHandler, ObjectMapper mapper) {
         super(defaultProcessUrl);
         this.successHandler = successHandler;
@@ -43,13 +42,10 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtil.isAjax(request)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Authentication method not supported. Request method: " + request.getMethod());
-            }
+        if (!HttpMethod.POST.name().equals(request.getMethod())) {
+            logger.info("Authentication method not supported. Request method: " + request.getMethod());
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
-
         LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
 
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {

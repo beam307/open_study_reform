@@ -1,4 +1,4 @@
-package org.project.study.security.auth.ajax;
+package org.project.study.security.auth.form;
 
 import org.project.study.model.User;
 import org.project.study.model.UserContext;
@@ -19,10 +19,9 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class AjaxAuthenticationProvider implements AuthenticationProvider {
+public class FormAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private PasswordEncoder encoder;

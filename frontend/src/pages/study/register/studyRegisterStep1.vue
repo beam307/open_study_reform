@@ -46,7 +46,7 @@
       }
     },
     created() {
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/majorRegion`)
+      this.$http.get('/api/study/majorRegion')
         .then((result) => {
           this.majorRegions = result.data.map(r => {
             return {
@@ -59,7 +59,7 @@
           console.log(e);
         });
 
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/minorRegion`)
+      this.$http.get('/api/study/minorRegion')
         .then((result) => {
           this.minorRegionAll = result.data;
         })

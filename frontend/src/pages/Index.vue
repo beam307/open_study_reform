@@ -85,7 +85,7 @@
       }
     },
     created() {
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/list`)
+      this.$http.get('/api/study/list')
         .then((result) => {
           this.studies = result.data;
           this.studies.map(s => s.meta = JSON.parse(s.meta));

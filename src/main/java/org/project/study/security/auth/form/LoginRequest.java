@@ -1,4 +1,4 @@
-package org.project.study.security.auth.ajax;
+package org.project.study.security.auth.form;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

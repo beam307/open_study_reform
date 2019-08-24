@@ -64,7 +64,7 @@
             createStudy() {
                 let study = _.cloneDeep(this.study);
                 study.meta = JSON.stringify(this.meta);
-                this.$http.post(`${process.env.JAVA_API_URL}/api/study/create`, study)
+                this.$http.post('/api/study/create', study)
                     .then((result) => {
                         this.resetStudy();
                         this.$router.push({name:'studyList'});

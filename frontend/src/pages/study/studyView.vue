@@ -102,7 +102,7 @@
         },
         methods: {},
         created() {
-            this.$http.get(`${process.env.JAVA_API_URL}/api/study/${this.$route.params.id}`)
+            this.$http.get(`/api/study/${this.$route.params.id}`)
                 .then((result) => {
                     this.study = result.data;
                     this.study.meta = JSON.parse(this.study.meta);

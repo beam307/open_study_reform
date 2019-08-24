@@ -24,7 +24,7 @@
       }
     },
     created() {
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/category`)
+      this.$http.get('/api/study/category')
         .then((result) => {
           this.categories = _.values(_.mapValues(result.data, (i) => {
             return {

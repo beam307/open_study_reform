@@ -11,13 +11,24 @@ import UserSignUp from '../pages/user/UserSignUp'
 import Index from '../pages/Index'
 
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
     {path: '/', component: Index},
-    {path: '/login', component: login},
+    {
+      path: '/login',
+      name: 'login',
+      component: login,
+      beforeEnter: (to, from, next) => {
+        if(window.localStorage.getItem('access-token')) {
+          next(false);
+        } else {
+          next();
+        }
+      }
+    },
     {
       path: '/user', component: User,
       children: [{
@@ -27,7 +38,7 @@ export default new Router({
     {
       path: '/study', component: Study,
       children: [{
-        path: 'list', name: 'studyList',  component: StudyList,
+        path: 'list', name: 'studyList', component: StudyList,
       }, {
         path: 'register', component: StudyRegister,
       }, {

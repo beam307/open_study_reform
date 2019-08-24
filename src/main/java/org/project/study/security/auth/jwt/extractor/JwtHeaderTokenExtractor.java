@@ -1,6 +1,6 @@
 package org.project.study.security.auth.jwt.extractor;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 

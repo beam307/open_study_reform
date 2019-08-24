@@ -1,7 +1,7 @@
 package org.project.study.model;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;

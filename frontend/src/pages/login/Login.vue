@@ -68,7 +68,8 @@
               <v-card>
                 <v-card-title class="headline">
                   <span class="title">비밀번호찾기</span>
-                  <v-spacer></v-spacer>v
+                  <v-spacer></v-spacer>
+                  v
                   <v-btn icon @click="findPwd = false">
                     <v-icon>close</v-icon>
                   </v-btn>
@@ -99,41 +100,54 @@
 
 
 <script>
-  import Header from '../../components/layouts/Header'
-  import Footer from '../../components/layouts/Footer'
+    import Header from '../../components/layouts/Header'
+    import Footer from '../../components/layouts/Footer'
+    import {mapActions} from 'vuex'
 
-  export default {
-    data() {
-      return {
-        findId: false,
-        findPwd: false,
-        valid: false,
-        password: '',
-        passwordRules: [
-          (v) => !!v || '비밀번호가 필요합니다.',
-        ],
-        email: '',
-        emailRules: [
-          (v) => !!v || '이메일이 필요합니다.',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 양식이 잘못되었습니다.'
-        ],
-      }
-    },
-    methods: {
-      submit() {
-        if (this.$refs.form.validate()) {
-          this.$refs.form.$el.submit()
-        }
-      },
-      clear() {
-        this.$refs.form.reset()
-      }
-    },
-    components: {
-      Header,
-      Footer,
-    },
-  }
+    export default {
+        data() {
+            return {
+                findId: false,
+                findPwd: false,
+                valid: false,
+                password: '',
+                passwordRules: [
+                    (v) => !!v || '비밀번호가 필요합니다.',
+                ],
+                email: '',
+                emailRules: [
+                    (v) => !!v || '이메일이 필요합니다.',
+                    (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 양식이 잘못되었습니다.'
+                ],
+            }
+        },
+        methods: {
+            ...mapActions({
+                setAuthenticated: 'user/setAuthenticated',
+                setAccessToken: 'user/setAccessToken',
+            }),
+
+            submit() {
+                this.$http.post('/api/auth/login', {
+                    email: this.email,
+                    pwd: this.password
+                })
+                    .then((result) => {
+                        this.setAuthenticated(true);
+                        this.setAccessToken(result.data.token);
+                        window.localStorage.setItem("access-token", result.data.token);
+                        this.$router.push("/");
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    });
+            }
+        },
+        components: {
+            Header,
+            Footer,
+        },
+    }
 </script>
 
 <style scoped>

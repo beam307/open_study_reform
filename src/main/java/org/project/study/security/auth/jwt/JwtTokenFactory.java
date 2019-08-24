@@ -1,9 +1,9 @@
 package org.project.study.security.auth.jwt;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
 import org.project.study.config.JwtSettings;
 import org.project.study.model.UserContext;
 import org.project.study.security.Scopes;

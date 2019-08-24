@@ -3,8 +3,8 @@ package org.project.study.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.project.study.filter.CustomCorsFilter;
 import org.project.study.security.auth.RestAuthenticationEntryPoint;
-import org.project.study.security.auth.ajax.AjaxAuthenticationProvider;
-import org.project.study.security.auth.ajax.AjaxLoginProcessingFilter;
+import org.project.study.security.auth.form.FormAuthenticationProvider;
+import org.project.study.security.auth.form.FormLoginProcessingFilter;
 import org.project.study.security.auth.jwt.JwtAuthenticationProvider;
 import org.project.study.security.auth.jwt.JwtTokenAuthenticationProcessingFilter;
 import org.project.study.security.auth.jwt.SkipPathRequestMatcher;
@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -46,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailureHandler failureHandler;
     @Autowired
-    private AjaxAuthenticationProvider ajaxAuthenticationProvider;
+    private FormAuthenticationProvider formAuthenticationProvider;
     @Autowired
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @Autowired
@@ -57,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ObjectMapper objectMapper;
 
-    protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
-        AjaxLoginProcessingFilter filter = new AjaxLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
+    protected FormLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
+        FormLoginProcessingFilter filter = new FormLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
         filter.setAuthenticationManager(this.authenticationManager);
         return filter;
     }
@@ -85,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(ajaxAuthenticationProvider);
+        auth.authenticationProvider(formAuthenticationProvider);
         auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
@@ -102,12 +103,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(FORM_BASED_LOGIN_ENTRY_POINT).permitAll()
                 .antMatchers(TOKEN_REFRESH_ENTRY_POINT).permitAll()
-                .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated()
+                .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).hasAnyAuthority("ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN")
             .and()
                 .addFilterBefore(new CustomCorsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AnonymousAuthenticationFilter("ROLE_GUEST"), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

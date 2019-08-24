@@ -20,8 +20,8 @@
     props: ['images'],
     data: function () {
       return {
-        saveTempURL: `${process.env.JAVA_API_URL}/api/study/saveTempImage`,
-        deleteTempURL: `${process.env.JAVA_API_URL}/api/study/deleteTempImage`,
+        saveTempURL: '/api/study/saveTempImage',
+        deleteTempURL: '/api/study/deleteTempImage',
       };
     },
     methods: {

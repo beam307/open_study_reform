@@ -94,7 +94,7 @@
       Thumbnail
     },
     created() {
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/category`)
+      this.$http.get('/api/study/category')
         .then((result) => {
           this.majorCategories = _.values(_.mapValues(result.data, (i) => {
             return {
@@ -107,7 +107,7 @@
           console.log(e);
         });
 
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/majorRegion`)
+      this.$http.get('/api/study/majorRegion')
         .then((result) => {
           this.majorRegions = result.data.map(r => {
             return {
@@ -120,7 +120,7 @@
           console.log(e);
         });
 
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/minorRegion`)
+      this.$http.get('/api/study/minorRegion')
         .then((result) => {
           this.minorRegionAll = result.data;
         })
@@ -128,7 +128,7 @@
           console.log(e);
         });
 
-      this.$http.get(`${process.env.JAVA_API_URL}/api/study/list`)
+      this.$http.get('/api/study/list')
         .then((result) => {
           this.studies = result.data;
           this.studies.map(s => s.meta = JSON.parse(s.meta));

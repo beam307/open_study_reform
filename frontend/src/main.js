@@ -5,11 +5,11 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
-import axios from 'axios'
+import { createAxios } from './axios/axios';
 import store from './store/store'
 
 Vue.use(Vuetify);
-Vue.prototype.$http = axios;
+createAxios(router, store);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
