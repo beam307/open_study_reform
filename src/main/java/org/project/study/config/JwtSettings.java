@@ -14,5 +14,5 @@ public class JwtSettings {
 
     private String tokenSigningKey;
 
-    private Integer refreshTokenExpTime;
+    private Long refreshTokenExpTime;
 }

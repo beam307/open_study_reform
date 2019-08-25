@@ -42,6 +42,16 @@ export function createAxios(router, store) {
     return Promise.reject(err);
   });
 
+  axios.interceptors.response.use((res) => {
+
+    return res;
+  }, err => {
+    if(err.response.data.errorCode == 11) {
+      console.log(err.response.data); // 리프레시 적용해야함
+    }
+    return Promise.reject(err);
+  });
+
   Vue.prototype.$authorizedApi = authrizedApi(axios, router, store);
   Vue.prototype.$http = axios;
 }

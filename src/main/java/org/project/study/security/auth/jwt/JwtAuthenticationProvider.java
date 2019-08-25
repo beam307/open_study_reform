@@ -3,19 +3,20 @@ package org.project.study.security.auth.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import org.project.study.config.JwtSettings;
-import org.project.study.model.UserContext;
+import org.project.study.model.LoginInfo;
+import org.project.study.model.User;
+import org.project.study.security.auth.crypto.Crypter;
+import org.project.study.security.auth.crypto.JcaCrypter;
 import org.project.study.security.auth.token.JwtAuthenticationToken;
 import org.project.study.security.auth.token.RawAccessJwtToken;
+import org.project.study.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -23,20 +24,33 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private JwtSettings jwtSettings;
 
+    @Autowired
+    private UserService userService;
+
+    @Value("security.crypter.key")
+    private String key;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         RawAccessJwtToken rawAccessToken = (RawAccessJwtToken) authentication.getCredentials();
 
+        Crypter crypter =  new JcaCrypter(key);
         Jws<Claims> jwsClaims = rawAccessToken.parseClaims(jwtSettings.getTokenSigningKey());
-        String subject = jwsClaims.getBody().getSubject();
-        List<String> scopes = jwsClaims.getBody().get("scopes", List.class);
-        List<GrantedAuthority> authorities = scopes.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority))
-                .collect(Collectors.toList());
 
-        UserContext context = UserContext.create(subject, authorities);
+        try {
+            String subject = crypter.decrypt(jwsClaims.getBody().getSubject());
+            LoginInfo loginInfo = LoginInfo.fromJson(subject);
 
-        return new JwtAuthenticationToken(context, context.getAuthorities());
+            if (loginInfo == null)
+                throw new BadCredentialsException("invalid loginInfo" + subject);
+
+            User user = userService.getUserByIdAndEmail(loginInfo.getId(), loginInfo.getEmail()).get();
+
+            return new JwtAuthenticationToken(user, user.getAuthorities());
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override

@@ -24,13 +24,17 @@ public class UserService {
     }
 
     public User getUser(Long id) {
-        User user =  userRepository.findById(id).get();
+        User user = userRepository.findById(id).get();
         user.setPwd(null);
-       return user;
+        return user;
     }
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> getUserByIdAndEmail(Long id, String email) {
+        return userRepository.findByIdAndEmail(id, email);
     }
 
     private String pwdEncode(String pwd) {

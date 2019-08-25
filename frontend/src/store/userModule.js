@@ -4,7 +4,7 @@ export default {
   state: {
     authenticated: false,
     accessToken: window.localStorage.getItem('access-token') ? window.localStorage.getItem('access-token') : null,
-    refreshToken: null,
+    refreshToken: window.localStorage.getItem('refresh-token') ? window.localStorage.getItem('refresh-token') : null,
   },
 
   getters: {

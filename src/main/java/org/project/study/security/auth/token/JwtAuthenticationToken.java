@@ -1,6 +1,6 @@
 package org.project.study.security.auth.token;
 
-import org.project.study.model.UserContext;
+import org.project.study.model.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private RawAccessJwtToken rawAccessToken;
-    private UserContext userContext;
+    private User user;
 
     public JwtAuthenticationToken(RawAccessJwtToken unsafeToken) {
         super(null);
@@ -17,10 +17,10 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         this.setAuthenticated(false);
     }
 
-    public JwtAuthenticationToken(UserContext userContext, Collection<? extends GrantedAuthority> authorities) {
+    public JwtAuthenticationToken(User user, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.eraseCredentials();
-        this.userContext = userContext;
+        this.user = user;
         super.setAuthenticated(true);
     }
 
@@ -31,7 +31,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return this.userContext;
+        return this.user;
     }
 
     @Override

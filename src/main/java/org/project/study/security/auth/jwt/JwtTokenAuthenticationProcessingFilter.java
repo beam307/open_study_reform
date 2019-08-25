@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -63,11 +62,10 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
             }
             sessionStrategy.onAuthentication(authResult, request, response);
         } catch (InternalAuthenticationServiceException failed) {
-            chain.doFilter(request, response);
-
+            unsuccessfulAuthentication(request, response, failed);
             return;
         } catch (AuthenticationException failed) {
-            chain.doFilter(request, response);
+            unsuccessfulAuthentication(request, response, failed);
             return;
         }
 

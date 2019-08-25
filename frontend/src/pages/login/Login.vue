@@ -125,22 +125,27 @@
             ...mapActions({
                 setAuthenticated: 'user/setAuthenticated',
                 setAccessToken: 'user/setAccessToken',
+                setRefreshToken: 'user/setRefreshToken',
             }),
 
             submit() {
                 this.$http.post('/api/auth/login', {
                     email: this.email,
                     pwd: this.password
-                })
+                    })
                     .then((result) => {
                         this.setAuthenticated(true);
-                        this.setAccessToken(result.data.token);
-                        window.localStorage.setItem("access-token", result.data.token);
+                        this.setAccessToken(result.data.accessToken);
+                        this.setRefreshToken(result.data.refreshToken);
+                        window.localStorage.setItem("access-token", result.data.accessToken);
+                        window.localStorage.setItem("refresh-token", result.data.refreshToken);
                         this.$router.push("/");
                     })
                     .catch((e) => {
-                        console.log(e);
+                        console.log(e.response);
+                        alert(e.response.data.message);
                     });
+
             }
         },
         components: {
