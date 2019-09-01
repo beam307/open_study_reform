@@ -26,7 +26,6 @@ public class User implements UserDetails {
 
     private String email;
 
-    @JsonIgnore
     private String pwd;
 
     private String name;
@@ -37,8 +36,10 @@ public class User implements UserDetails {
 
     private String gender;
 
+    @Column(name = "admin", insertable = false, updatable = false)
     private Boolean admin;
 
+    @Column(name = "active", insertable = false, updatable = false)
     private Boolean active;
 
     @Column(name = "created_at", insertable = false, updatable = false)

@@ -121,7 +121,6 @@
             }
           })
             .then((result) => {
-              console.log(result);
               this.$router.push("/");
             })
             .catch((e) => {

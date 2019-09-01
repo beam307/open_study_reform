@@ -135,7 +135,6 @@
         })
         .catch((e) => {
           console.log(e);
-          this.$route.router.go('/');
         });
 
     },

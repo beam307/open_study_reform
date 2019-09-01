@@ -106,7 +106,6 @@
                 .then((result) => {
                     this.study = result.data;
                     this.study.meta = JSON.parse(this.study.meta);
-                    console.log(this.study);
                 })
                 .catch((e) => {
                     console.log(e);

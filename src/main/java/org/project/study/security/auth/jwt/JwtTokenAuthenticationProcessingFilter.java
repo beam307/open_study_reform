@@ -4,6 +4,7 @@ import org.project.study.config.SecurityConfig;
 import org.project.study.security.auth.jwt.extractor.TokenExtractor;
 import org.project.study.security.auth.token.JwtAuthenticationToken;
 import org.project.study.security.auth.token.RawAccessJwtToken;
+import org.project.study.security.exception.JwtExpiredTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -64,8 +65,11 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         } catch (InternalAuthenticationServiceException failed) {
             unsuccessfulAuthentication(request, response, failed);
             return;
-        } catch (AuthenticationException failed) {
+        } catch (JwtExpiredTokenException failed) {
             unsuccessfulAuthentication(request, response, failed);
+            return;
+        } catch (AuthenticationException failed) {
+            chain.doFilter(request, response);
             return;
         }
 

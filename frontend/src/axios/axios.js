@@ -36,18 +36,34 @@ const redirect = (router) => {
 export function createAxios(router, store) {
 
   axios.interceptors.request.use((config) => {
-    config.headers = {'X-AUTH-TOKEN': store.getters['user/accessToken']};
+    if (store.getters['user/accessToken']) {
+      config.headers = Object.assign(config.headers, {'X-AUTH-TOKEN': store.getters['user/accessToken']});
+    }
     return config;
   }, err => {
     return Promise.reject(err);
   });
 
   axios.interceptors.response.use((res) => {
-
     return res;
   }, err => {
-    if(err.response.data.errorCode == 11) {
-      console.log(err.response.data); // 리프레시 적용해야함
+    if (err.response.data.errorCode == 11) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-REFRESH-TOKEN': store.getters['user/refreshToken']
+      };
+      axios.post("/api/auth/refreshToken", null, {headers: headers})
+        .then(result => {
+          store.dispatch('user/setAccessToken', result.data);
+          window.localStorage.setItem("access-token", result.data);
+          window.location.reload();
+        }).catch(err => {
+        store.dispatch('user/setAuthenticated', false);
+        store.dispatch('user/setAccessToken', null);
+        store.dispatch('user/setRefreshToken', null);
+        window.localStorage.removeItem("access-token");
+        window.localStorage.removeItem("refresh-token");
+      })
     }
     return Promise.reject(err);
   });

@@ -15,7 +15,6 @@ public class UserController {
 
     @PostMapping("/save")
     public void create(@RequestBody User user) {
-        System.out.println(user);
         userService.create(user);
     }
 

@@ -89,7 +89,6 @@
         .then((result) => {
           this.studies = result.data;
           this.studies.map(s => s.meta = JSON.parse(s.meta));
-          console.log(this.studies);
         })
         .catch((e) => {
           console.log(e);
@@ -127,7 +126,7 @@
     webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
     width: 100%;
-    z-index: 999;
+    z-index: 99;
   }
 
   .visual_contents h3 {

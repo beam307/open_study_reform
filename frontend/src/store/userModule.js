@@ -2,7 +2,7 @@ export default {
   namespaced: true,
 
   state: {
-    authenticated: false,
+    authenticated: window.localStorage.getItem('access-token') ? true : false,
     accessToken: window.localStorage.getItem('access-token') ? window.localStorage.getItem('access-token') : null,
     refreshToken: window.localStorage.getItem('refresh-token') ? window.localStorage.getItem('refresh-token') : null,
   },

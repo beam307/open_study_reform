@@ -53,6 +53,21 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     }
 
+    public User parseRefreshToken(String refreshToken) {
+        try {
+            RawAccessJwtToken rawAccessToken = new RawAccessJwtToken(refreshToken);
+            Crypter crypter = new JcaCrypter(key);
+            Jws<Claims> jwsClaims = rawAccessToken.parseClaims(jwtSettings.getTokenSigningKey());
+
+            String subject = crypter.decrypt(jwsClaims.getBody().getSubject());
+            LoginInfo loginInfo = LoginInfo.fromJson(subject);
+            User user = userService.getUserByIdAndEmail(loginInfo.getId(), loginInfo.getEmail()).get();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public boolean supports(Class<?> authentication) {
         return (JwtAuthenticationToken.class.isAssignableFrom(authentication));

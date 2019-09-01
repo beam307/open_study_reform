@@ -28,5 +28,6 @@ HELP.md
 ### VS Code ###
 .vscode/
 
-*.properties
+db.properties
+security.properties
 
