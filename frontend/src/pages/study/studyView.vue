@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="study-view">
+  <v-container fluid class="px-0 study-view">
     <v-carousel height="400">
       <v-carousel-item
         v-for="(image,i) in study.meta.images"
@@ -75,11 +75,17 @@
         <v-textarea readonly no-resize solo flat background-color="transparent" :value="study.introduce"></v-textarea>
       </v-flex>
     </v-layout>
+    <v-divider></v-divider>
+    <ReplyReg></ReplyReg>
+    <v-divider></v-divider>
+    <ReplyList></ReplyList>
   </v-container>
 </template>
 
 <script>
     import moment from 'moment'
+    import ReplyReg from '../../components/reply/ReplyReg'
+    import ReplyList from '../../components/reply/ReplyList'
 
     export default {
         data() {
@@ -116,6 +122,10 @@
                 if (!value) return '';
                 return moment(value).format('YYYY-MM-DD');
             }
+        },
+        components: {
+            ReplyReg,
+            ReplyList
         }
     }
 </script>
