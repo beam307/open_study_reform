@@ -42,14 +42,25 @@
         data() {
             return {}
         },
+        created() {
+            if (!this.isProfile) {
+                this.$http.get("/api/user/me").then(user => {
+                    this.setProfile(user.data);
+                }).catch(e => {
+                    console.log(e);
+                })
+            }
+
+        },
         computed: {
-            ...mapGetters({authenticated: 'user/authenticated'}),
+            ...mapGetters({authenticated: 'user/authenticated', isProfile: 'user/isProfile'}),
         },
         methods: {
             ...mapActions({
                 setAuthenticated: 'user/setAuthenticated',
                 setAccessToken: 'user/setAccessToken',
                 setRefreshToken: 'user/setRefreshToken',
+                setProfile: 'user/setProfile'
             }),
             logout() {
                 this.setAuthenticated(false);
@@ -78,6 +89,7 @@
   .home:before {
     background-color: #212121;
   }
+
   .nav {
     z-index: 999;
   }

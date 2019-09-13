@@ -3,7 +3,7 @@ import Axios from 'axios';
 
 let axios = Axios.create({
   baseURL: process.env.JAVA_API_URL,
-  timeout: 3000,
+  timeout: 5000,
 });
 
 const authrizedApi = (axios, router, store) => ({

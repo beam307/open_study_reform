@@ -4,6 +4,8 @@ import org.project.study.model.User;
 import org.project.study.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,11 +21,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUser(@PathVariable Long id) {
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
         User user = userService.getUser(id);
-        if(user == null) {
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<Object> getProfile(@AuthenticationPrincipal User user) {
+
+        if (user == null) {
+            return ResponseEntity.ok(null);
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
 }

@@ -2,11 +2,7 @@ package org.project.study.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "`study`")
-@ToString
 public class Study {
 
     @Id
@@ -44,11 +39,11 @@ public class Study {
     @Column(name = "view_cnt")
     private Integer viewCnt;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private Date createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 

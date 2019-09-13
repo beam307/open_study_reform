@@ -78,7 +78,7 @@
     <v-divider></v-divider>
     <ReplyReg></ReplyReg>
     <v-divider></v-divider>
-    <ReplyList></ReplyList>
+    <ReplyList :studyWriterId = study.studyWriterId></ReplyList>
   </v-container>
 </template>
 

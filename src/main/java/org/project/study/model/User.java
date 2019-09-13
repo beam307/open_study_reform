@@ -1,9 +1,10 @@
 package org.project.study.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,29 +18,39 @@ import java.util.Date;
 @Getter
 @Setter
 @Table(name = "`user`")
-@ToString
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE,
+                getterVisibility = JsonAutoDetect.Visibility.NONE,
+                isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private Long id;
 
+    @JsonProperty
     private String email;
 
     private String pwd;
 
+    @JsonProperty
     private String name;
 
+    @JsonProperty
     private String nickname;
 
+    @JsonProperty
     private Integer birth;
 
+    @JsonProperty
     private String gender;
 
     @Column(name = "admin", insertable = false, updatable = false)
+    @JsonProperty
     private Boolean admin;
 
     @Column(name = "active", insertable = false, updatable = false)
+    @JsonProperty
     private Boolean active;
 
     @Column(name = "created_at", insertable = false, updatable = false)
