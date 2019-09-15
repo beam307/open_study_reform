@@ -55,7 +55,7 @@
             StudyRegisterStep3,
         },
         computed: {
-            ...mapGetters({meta: 'study/meta'}),
+            ...mapGetters({meta: 'study/meta', userId: 'user/id'}),
             ...mapState(['study'])
         },
         methods: {
@@ -64,6 +64,7 @@
             createStudy() {
                 let study = _.cloneDeep(this.study);
                 study.meta = JSON.stringify(this.meta);
+                study.studyWriterId = this.userId;
                 this.$http.post('/api/study/create', study)
                     .then((result) => {
                         this.resetStudy();

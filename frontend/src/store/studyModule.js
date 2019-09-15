@@ -1,9 +1,9 @@
 const study = () => {
   return {
     name: '',
-    majorRegion: 0,
-    minorRegion: 0,
-    categories: [],
+    majorRegionId: 0,
+    minorRegionId: 0,
+    categoryIds: [],
     meta: {
       age: [],
       time: [],
@@ -25,13 +25,13 @@ export default {
       return state.name;
     },
     majorRegion: function (state) {
-      return state.majorRegion;
+      return state.majorRegionId;
     },
     minorRegion: function (state) {
-      return state.minorRegion;
+      return state.minorRegionId;
     },
     categories: function (state) {
-      return state.categories;
+      return state.categoryIds;
     },
     meta: function (state) {
       return state.meta;
@@ -61,13 +61,13 @@ export default {
       state.name = payload;
     },
     setMajorRegion: (state, payload) => {
-      state.majorRegion = payload;
+      state.majorRegionId = payload;
     },
     setMinorRegion: (state, payload) => {
-      state.minorRegion = payload;
+      state.minorRegionId = payload;
     },
     setCategories: (state, payload) => {
-      state.categories = payload;
+      state.categoryIds = payload;
     },
     setMeta: (state, payload) => {
       state.meta = payload;

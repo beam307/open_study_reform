@@ -60,7 +60,8 @@
                 setAuthenticated: 'user/setAuthenticated',
                 setAccessToken: 'user/setAccessToken',
                 setRefreshToken: 'user/setRefreshToken',
-                setProfile: 'user/setProfile'
+                setProfile: 'user/setProfile',
+                resetProfile: 'user/resetProfile'
             }),
             logout() {
                 this.setAuthenticated(false);
@@ -68,6 +69,7 @@
                 this.setRefreshToken(null);
                 window.localStorage.removeItem("access-token");
                 window.localStorage.removeItem("refresh-token");
+                this.resetProfile();
                 alert("로그아웃하셨습니다.");
                 this.$router.push("/");
             }

@@ -36,7 +36,7 @@ public class Study {
     @Column(name = "max_member_cnt")
     private Integer maxMemberCnt;
 
-    @Column(name = "view_cnt")
+    @Column(name = "view_cnt", insertable = false)
     private Integer viewCnt;
 
     @Column(name = "created_at", insertable = false, updatable = false)
@@ -50,6 +50,7 @@ public class Study {
     @Column(name = "start_date")
     private Date startDate;
 
+    @Column(name="status", insertable = false)
     private Integer status;
 
     @Transient
@@ -72,9 +73,4 @@ public class Study {
     @JoinColumn(name="minor_region", insertable = false, updatable = false)
     private MinorRegion minorRegion;
 
-    @PrePersist
-    public void prePersist() {
-        this.viewCnt = this.viewCnt == null ? 0 : this.viewCnt;
-        this.status = this.status == null ? 1 : this.status;
-    }
 }

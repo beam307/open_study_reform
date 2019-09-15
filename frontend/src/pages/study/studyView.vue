@@ -1,10 +1,16 @@
 <template>
   <v-container fluid class="px-0 study-view">
     <v-carousel height="400">
+      <template v-if="study.meta.images.length > 0">
+        <v-carousel-item
+          v-for="(image,i) in study.meta.images"
+          :key="i"
+          :src="require(`../../assets/temp/${image}`)"
+        ></v-carousel-item>
+      </template>
       <v-carousel-item
-        v-for="(image,i) in study.meta.images"
-        :key="i"
-        :src="require(`../../assets/temp/${image}`)"
+        v-else
+        :src="require('../../assets/img/study_default.jpg')"
       ></v-carousel-item>
     </v-carousel>
     <v-layout wrap mt-4>
@@ -92,8 +98,8 @@
             return {
                 study: {
                     name: '',
-                    majorRegion: 0,
-                    minorRegion: 0,
+                    majorRegion: {},
+                    minorRegion: {},
                     categories: [],
                     meta: {
                         age: [],

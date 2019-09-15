@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
-    List<Reply> findAllByStudyId(Long studyId);
+    List<Reply> findAllByStudyIdOrderByCreatedAtDesc(Long studyId);
 }

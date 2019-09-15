@@ -57,6 +57,7 @@
                     this.submitFlag = false;
                     this.$http.post("/api/reply", this.reply)
                         .then(r => {
+                            this.$EventBus.$emit("replyList");
                             this.reply.text = "";
                         }).catch(e => {
                         console.log(e);

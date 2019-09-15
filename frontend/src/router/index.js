@@ -1,6 +1,7 @@
 import 'babel-polyfill'
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store/store'
 import User from '../pages/user/User'
 import Study from '../pages/study/Study'
 import StudyList from '../pages/study/StudyList'
@@ -22,8 +23,8 @@ export default new Router({
       name: 'login',
       component: login,
       beforeEnter: (to, from, next) => {
-        if(window.localStorage.getItem('access-token')) {
-          next(false);
+        if (store.getters['user/authenticated']) {
+          next('/');
         } else {
           next();
         }
@@ -41,6 +42,14 @@ export default new Router({
         path: 'list', name: 'studyList', component: StudyList,
       }, {
         path: 'register', component: StudyRegister,
+        beforeEnter: (to, from, next) => {
+          if (store.getters['user/authenticated']) {
+            next();
+          } else {
+            alert("로그인이 필요합니다.");
+            next('/login');
+          }
+        }
       }, {
         path: ':id', name: 'studyView', component: StudyView,
       }]

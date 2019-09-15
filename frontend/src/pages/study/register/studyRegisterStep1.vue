@@ -93,7 +93,7 @@
       },
       majorRegion: {
         get () {
-          return this.$store.state.study.majorRegion
+          return this.$store.state.study.majorRegionId
         },
         set (value) {
           this.$store.commit('study/setMajorRegion', value)
@@ -101,7 +101,7 @@
       },
       minorRegion: {
         get () {
-          return this.$store.state.study.minorRegion
+          return this.$store.state.study.minorRegionId
         },
         set (value) {
           this.$store.commit('study/setMinorRegion', value)

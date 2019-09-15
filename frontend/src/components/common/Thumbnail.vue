@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-img :src="require(`@/assets/temp/${study.meta.images[0]}`)" contain max-width="300" max-height="150"></v-img>
+    <v-img v-if="study.meta.images.length > 0" :src="require(`@/assets/temp/${study.meta.images[0]}`)" contain max-width="300" max-height="150"></v-img>
+    <v-img v-else :src="require('@/assets/img/study_default.jpg')" contain max-width="300" max-height="150"></v-img>
     <v-card-title primary-title>
       {{study.name}}
     </v-card-title>

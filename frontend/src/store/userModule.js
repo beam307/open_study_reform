@@ -50,6 +50,10 @@ export default {
       state.id = payload.id;
       state.name = payload.nickname;
     },
+    resetProfile: (state, payload) => {
+      state.id = null;
+      state.name = null;
+    },
   },
 
   actions: {
@@ -70,6 +74,9 @@ export default {
     },
     setProfile: (context, payload) => {
       context.commit("setProfile", payload);
+    },
+    resetProfile: (context, payload) => {
+      context.commit("resetProfile", payload);
     }
   }
 

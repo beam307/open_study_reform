@@ -45,7 +45,7 @@
     computed: {
       checked: {
         get () {
-          return this.$store.state.study.categories
+          return this.$store.state.study.categoryIds
         },
         set (value) {
           this.$store.commit('study/setCategories', value)

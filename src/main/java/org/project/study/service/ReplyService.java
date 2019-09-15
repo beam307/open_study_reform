@@ -19,7 +19,7 @@ public class ReplyService {
 
     public List<Reply> getReplies(Long studyId) {
 
-        return replyRepository.findAllByStudyId(studyId);
+        return replyRepository.findAllByStudyIdOrderByCreatedAtDesc(studyId);
     }
 }
 

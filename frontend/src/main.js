@@ -13,6 +13,8 @@ Vue.use(Vuetify);
 createAxios(router, store);
 Vue.config.productionTip = false;
 
+Vue.prototype.$EventBus = new Vue();
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

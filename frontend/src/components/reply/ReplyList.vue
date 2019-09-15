@@ -4,10 +4,8 @@
       <v-layout pt-3>
         <v-flex xs6 sm3>
           <v-icon size="20" v-if="reply.secret">lock</v-icon>
-          <template v-if="secret(reply.userId, reply.secret)">
             <strong>작성자</strong>
             <span>{{reply.nickname}}</span>
-          </template>
         </v-flex>
         <v-spacer class="hidden-xs-only"></v-spacer>
         <v-flex xs6 sm3 class="text-sm-right text-xs-right">
@@ -16,9 +14,8 @@
       </v-layout>
       <v-layout>
         <v-flex>
-          <v-textarea v-if="secret(reply.userId, reply.secret)" readonly no-resize
-                      solo flat background-color="transparent" rows="3" :value="reply.text"></v-textarea>
-          <p v-else>비밀글 입니다.</p>
+          <v-textarea readonly no-resize solo flat
+                      background-color="transparent" rows="3" :value="reply.text"></v-textarea>
         </v-flex>
       </v-layout>
     </v-timeline-item>
@@ -44,16 +41,21 @@
             }),
         },
         created() {
-            this.$http.get(`/api/reply/${this.$route.params.id}`)
-                .then(r => {
-                    this.replies = r.data;
-                }).catch(e => {
-                console.log(e);
-            })
+            this.init();
+        },
+        mounted() {
+            this.$EventBus.$on('replyList', () => {
+               this.init();
+            });
         },
         methods: {
-            secret(userId, secret) {
-                return !(secret && (this.userId != userId || this.userId != this.studyWriterId));
+            init() {
+                this.$http.get(`/api/reply/${this.$route.params.id}`)
+                    .then(r => {
+                        this.replies = r.data;
+                    }).catch(e => {
+                    console.log(e);
+                })
             }
         }
     }
