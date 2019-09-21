@@ -1,10 +1,12 @@
 package org.project.study.service;
 
+import com.google.common.collect.ImmutableMap;
 import org.project.study.model.*;
 import org.project.study.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,8 +61,15 @@ public class StudyService {
         return majorRegions;
     }
 
-    public List<Study> getStudyList() {
-        return studyRepository.findAll();
+    public Map<String, Object> getStudyList(SearchDTO searchDTO) {
+        List<Study> studies= new ArrayList<>();
+        // TODO 동적쿼리처리.....
+        if(searchDTO.getMajorCategory() == null || searchDTO.getMinorCategory() == null) {
+            studies = studyRepository.findAll();
+        }
+
+        Integer total = studies.size();
+        return ImmutableMap.of("studies", studies, "total", total);
     }
 
     public Study getStudy(Long id) {

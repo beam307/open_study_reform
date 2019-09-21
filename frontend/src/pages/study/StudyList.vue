@@ -3,17 +3,12 @@
     <v-card>
       <v-card-text>
         <v-layout wrap>
-          <v-flex sm9 xs8 pa-2>
-            <v-text-field height="36" autofocus label="검색어를 입력하세요." v-model="keyword"></v-text-field>
-          </v-flex>
-          <v-flex sm3 xs4 pa-2>
-            <v-btn block large type="submit">검색</v-btn>
-          </v-flex>
-        </v-layout>
-        <v-layout wrap>
           <v-flex xs6 px-2 py-1>
             <v-select
               :items="majorRegions"
+              v-model="majorRegion"
+              item-text="text"
+              item-value="value"
               label="지역 대분류"
               solo
               @change="minorRegionChoice($event)"
@@ -22,6 +17,9 @@
           <v-flex xs6 px-2 py-1>
             <v-select
               :items="minorRegions"
+              v-model="minorRegion"
+              item-text="text"
+              item-value="value"
               label="지역 소분류"
               solo
             ></v-select>
@@ -31,6 +29,9 @@
           <v-flex xs6 px-2 py-1>
             <v-select
               :items="majorCategories"
+              v-model="majorCategory"
+              item-text="text"
+              item-value="value"
               label="카테고리 대분류"
               solo
               @change="minorCategoryChoice($event)"
@@ -39,6 +40,9 @@
           <v-flex xs6 px-2 py-1>
             <v-select
               :items="minorCategories"
+              v-model="minorCategory"
+              item-text="text"
+              item-value="value"
               label="카테고리 소분류"
               solo
             ></v-select>
@@ -48,11 +52,24 @@
     </v-card>
     <v-card class="mt-3">
       <v-card-text>
-        <v-layout wrap>
+        <v-layout wrap justify-space-between>
           <v-flex sm3 xs6>
             <v-select
-              :items="filter"
+              :items="filters"
+              item-text="text"
+              item-value="value"
               label="정렬"
+              v-model="filter"
+              solo
+            ></v-select>
+          </v-flex>
+          <v-flex sm3 xs6>
+            <v-select
+              :items="counts"
+              item-text="text"
+              item-value="value"
+              label="스터디 수"
+              v-model="count"
               solo
             ></v-select>
           </v-flex>
@@ -66,6 +83,7 @@
           <v-pagination
             v-model="page"
             :length="5"
+            :value="page"
           ></v-pagination>
         </v-layout>
       </v-card-text>
@@ -79,15 +97,28 @@
   export default {
     data() {
       return {
-        keyword: '',
+        studies: [],
         majorRegions: [],
         minorRegions: [],
         minorRegionAll: [],
         majorCategories: [],
         minorCategories: [],
-        filter: ['최신순', '인기순', '조회수'],
-        page: 1,
-        studies: [],
+        filters: [
+            {text: '최신순', value: 'l'},
+            {text: '인기순', value: 'p'},
+            {text: '조회수', value: 'r'}],
+        counts: [
+            {text: '9개씩', value: 1},
+            {text: '18개씩', value: 2},
+            {text: '27개씩', value: 3},
+            {text: '36개씩', value: 4}],
+        page: parseInt(this.$route.query.page) || 1,
+        filter: this.$route.query.filter || 'l',
+        count: parseInt(this.$route.query.count) || 1,
+        majorRegion: parseInt(this.$route.query.majorRegion) || null,
+        minorRegion: parseInt(this.$route.query.minorRegion) || null,
+        majorCategory: parseInt(this.$route.query.majorCategory) || null,
+        minorCategory: parseInt(this.$route.query.minorCategory) || null
       }
     },
     components: {
@@ -128,7 +159,17 @@
           console.log(e);
         });
 
-      this.$http.get('/api/study/list')
+      this.$http.get('/api/study/list', {
+          params: {
+              page: this.page,
+              filter: this.filter,
+              count: this.count,
+              majorRegion: this.majorRegion,
+              minorRegion: this.minorRegion,
+              majorCategory: this.majorCategory,
+              minorCategory: this.minorCategory
+          }
+      })
         .then((result) => {
           this.studies = result.data;
           this.studies.map(s => s.meta = JSON.parse(s.meta));
@@ -136,7 +177,6 @@
         .catch((e) => {
           console.log(e);
         });
-
     },
     methods: {
       minorCategoryChoice(major) {

@@ -1,9 +1,6 @@
 package org.project.study.controller;
 
-import org.project.study.model.Category;
-import org.project.study.model.MajorRegion;
-import org.project.study.model.MinorRegion;
-import org.project.study.model.Study;
+import org.project.study.model.*;
 import org.project.study.service.StudyService;
 import org.project.study.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +34,8 @@ public class StudyController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Study>> studyList() {
-        return ResponseEntity.ok(studyService.getStudyList());
+    public ResponseEntity<Map> studyList(@ModelAttribute SearchDTO searchDTO) {
+        return ResponseEntity.ok(studyService.getStudyList(searchDTO));
     }
 
     @GetMapping("/{id}")
