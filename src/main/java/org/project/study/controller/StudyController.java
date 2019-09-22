@@ -45,7 +45,7 @@ public class StudyController {
         if(study == null) {
             return ResponseEntity.notFound().build();
         }
-        
+
 
         return ResponseEntity.ok(studyService.getStudy(id));
     }

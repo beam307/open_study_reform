@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import org.project.study.model.*;
 import org.project.study.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,14 +65,9 @@ public class StudyService {
     }
 
     public Map<String, Object> getStudyList(SearchDTO searchDTO) {
-        List<Study> studies= new ArrayList<>();
-        // TODO 동적쿼리처리.....
-        if(searchDTO.getMajorCategory() == null || searchDTO.getMinorCategory() == null) {
-            studies = studyRepository.findAll();
-        }
-
-        Integer total = studies.size();
-        return ImmutableMap.of("studies", studies, "total", total);
+        Pageable pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getCount(), Sort.by(Sort.Direction.DESC, searchDTO.getFilter()));
+        Page<Study> studies = searchDTO.getMajorRegion() != null ? studyRepository.findByMajorRegionId(searchDTO.getMajorRegion(), pageable): studyRepository.findAll(pageable);
+        return ImmutableMap.of("studies", studies.getContent(), "total", studies.getTotalPages());
     }
 
     public Study getStudy(Long id) {
