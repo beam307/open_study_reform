@@ -36,20 +36,25 @@ public class StudyService {
         studyRepository.saveAndFlush(study);
         Long studyId = study.getId();
 
-        List<StudyCategory> categories = study.getCategoryIds().stream()
+        List<StudyCategory> categories = study.getCategoryIds()
+                .stream()
                 .map(c -> new StudyCategory(studyId, c))
                 .collect(Collectors.toList());
 
         studyCategoryRepository.saveAll(categories);
     }
 
-    public Map<String, List<Category>> getCategoryList() {
+    public Map<String, List<Category>> getCategoryGroupList() {
         List<Category> categories = categoryRepository.findAll();
 
         Map<String, List<Category>> categoryGrouping = categories.stream()
                 .collect(Collectors.groupingBy(Category::getTitle));
 
         return categoryGrouping;
+    }
+
+    public List<Category> getCategoryList() {
+        return categoryRepository.findAll();
     }
 
     public Map<Integer, List<MinorRegion>> getMinorRegionList() {
@@ -65,13 +70,32 @@ public class StudyService {
     }
 
     public Map<String, Object> getStudyList(SearchDTO searchDTO) {
-        Pageable pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getCount(), Sort.by(Sort.Direction.DESC, searchDTO.getFilter()));
-        Page<Study> studies = searchDTO.getMajorRegion() != null ? studyRepository.findByMajorRegionId(searchDTO.getMajorRegion(), pageable): studyRepository.findAll(pageable);
+        Page<Study> studies = this.searchStudy(searchDTO);
+
         return ImmutableMap.of("studies", studies.getContent(), "total", studies.getTotalPages());
     }
 
     public Study getStudy(Long id) {
         return studyRepository.findById(id).orElse(null);
+    }
+
+    private Page<Study> searchStudy(SearchDTO searchDTO) {
+        Pageable pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getCount(), Sort.by(Sort.Direction.DESC, searchDTO.getFilter()));
+
+        List<Long> studyIds = null;
+        if (searchDTO.getCategory() != null) {
+            studyIds = studyCategoryRepository.findByCategoryId(searchDTO.getCategory())
+                    .stream()
+                    .map(sc -> sc.getStudyId())
+                    .collect(Collectors.toList());
+        }
+
+        if (studyIds != null) {
+            return searchDTO.getRegion() != null ?
+                    studyRepository.findByIdInAndMajorRegionId(studyIds, searchDTO.getRegion(), pageable) : studyRepository.findByIdIn(studyIds, pageable);
+        } else {
+            return searchDTO.getRegion() != null ? studyRepository.findByMajorRegionId(searchDTO.getRegion(), pageable) : studyRepository.findAll(pageable);
+        }
     }
 }
 

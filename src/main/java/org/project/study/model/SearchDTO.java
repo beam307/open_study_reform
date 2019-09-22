@@ -1,6 +1,5 @@
 package org.project.study.model;
 
-import com.google.common.collect.ImmutableList;
 import lombok.Data;
 
 @Data
@@ -12,25 +11,28 @@ public class SearchDTO {
 
     private Integer count;
 
-    private Integer majorRegion;
+    private Integer region;
 
-    private Integer majorCategory;
+    private Integer category;
 
     public Integer getPage() {
-        if (this.page < 1) {
+        if (this.page == null || this.page < 1) {
             return 0;
         }
         return this.page - 1;
     }
 
     public Integer getCount() {
-        if (ImmutableList.of(1, 2, 3, 4).contains(this.count)) {
-            return this.count * 9;
+        if (this.count == null) {
+            return 6;
         }
-        return 9;
+        return this.count;
     }
 
     public String getFilter() {
+        if(this.filter == null) {
+            return "createdAt";
+        }
         switch (this.filter) {
             case "r":
                 return "viewCnt";

@@ -1,16 +1,14 @@
 package org.project.study.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "`study_category`")
-@ToString
+@Data
+@NoArgsConstructor(force = true)
 public class StudyCategory {
 
     @Id
@@ -23,9 +21,12 @@ public class StudyCategory {
     @Column(name = "category_id")
     private Integer categoryId;
 
-
     public StudyCategory(Long studyId, Integer categoryId) {
         this.studyId = studyId;
         this.categoryId = categoryId;
+    }
+
+    public StudyCategory(Long studyId) {
+        this.studyId = studyId;
     }
 }

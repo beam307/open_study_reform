@@ -51,7 +51,12 @@ public class StudyController {
     }
 
     @GetMapping("/category")
-    public Map<String, List<Category>> getCategoryList() {
+    public Map<String, List<Category>> getCategoryGroupList() {
+        return studyService.getCategoryGroupList();
+    }
+
+    @GetMapping("/category/all")
+    public List<Category> getCategoryList() {
         return studyService.getCategoryList();
     }
 

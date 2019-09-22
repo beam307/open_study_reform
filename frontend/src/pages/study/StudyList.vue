@@ -1,14 +1,17 @@
 <template>
   <v-container fluid>
     <v-card>
-      <v-card-text>
+      <v-card-title class="title pl-4">
+        검색기능
+      </v-card-title>
+      <v-card-text class="py-0">
         <v-layout wrap>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="majorRegions"
-              v-model="majorRegion"
-              item-text="text"
-              item-value="value"
+              :items="regions"
+              v-model="region"
+              item-text="name"
+              item-value="id"
               label="지역 분류"
               solo
               @change="list"
@@ -16,10 +19,10 @@
           </v-flex>
           <v-flex xs6 px-2 py-1>
             <v-select
-              :items="majorCategories"
-              v-model="majorCategory"
-              item-text="text"
-              item-value="value"
+              :items="categories"
+              v-model="category"
+              item-text="name"
+              item-value="id"
               label="카테고리 분류"
               solo
               @change="list"
@@ -79,42 +82,34 @@
         data() {
             return {
                 studies: [],
-                majorRegions: [],
-                minorRegions: [],
-                minorRegionAll: [],
-                majorCategories: [],
-                minorCategories: [],
+                regions: [{id: null, name: '전체'}],
+                categories: [{id: null, name: '전체', title: '전체'}],
                 filters: [
                     {text: '최신순', value: 'l'},
                     {text: '인기순', value: 'p'},
                     {text: '조회수', value: 'r'}],
                 counts: [
-                    {text: '9개씩', value: 1},
-                    {text: '18개씩', value: 2},
-                    {text: '27개씩', value: 3},
-                    {text: '36개씩', value: 4}],
+                    {text: '9개씩', value: 9},
+                    {text: '18개씩', value: 18},
+                    {text: '27개씩', value: 27},
+                    {text: '36개씩', value: 36}],
                 page: {
                     length: 1,
-                    value: parseInt(this.$route.query.page) || 1,
+                    value: 1,
                 },
-                filter: this.$route.query.filter || 'l',
-                count: parseInt(this.$route.query.count) || 1,
-                majorRegion: parseInt(this.$route.query.majorRegion) || null,
-                majorCategory: parseInt(this.$route.query.majorCategory) || null,
+                filter: 'l',
+                count: 9,
+                region: null,
+                category: null,
             }
         },
         components: {
             Thumbnail
         },
         created() {
-            this.$http.get('/api/study/category')
+            this.$http.get('/api/study/category/all')
                 .then((result) => {
-                    this.majorCategories = _.values(_.mapValues(result.data, (i) => {
-                        return {
-                            text: i[0].title,
-                            items: i
-                        }
-                    }));
+                    this.categories.push(...result.data);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -122,12 +117,7 @@
 
             this.$http.get('/api/study/majorRegion')
                 .then((result) => {
-                    this.majorRegions = result.data.map(r => {
-                        return {
-                            text: r.name,
-                            value: r.id
-                        }
-                    });
+                    this.regions.push(...result.data);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -143,8 +133,8 @@
                         page: this.page.value,
                         filter: this.filter,
                         count: this.count,
-                        majorRegion: this.majorRegion,
-                        majorCategory: this.majorCategory,
+                        region: this.region,
+                        category: this.category,
                     }
                 })
                     .then((result) => {

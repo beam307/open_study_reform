@@ -87,7 +87,7 @@
     created() {
       this.$http.get('/api/study/list')
         .then((result) => {
-          this.studies = result.data;
+          this.studies = result.data.studies;
           this.studies.map(s => s.meta = JSON.parse(s.meta));
         })
         .catch((e) => {
