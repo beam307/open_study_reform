@@ -9,6 +9,7 @@
         <v-btn flat to="/user/signUp">회원가입</v-btn>
       </template>
       <template v-else>
+        <v-btn flat to="/user/myPage">마이페이지</v-btn>
         <v-btn flat @click="logout()">로그아웃</v-btn>
       </template>
     </v-toolbar-items>

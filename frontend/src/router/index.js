@@ -10,6 +10,9 @@ import StudyView from '../pages/study/StudyView'
 import login from '../pages/login/Login'
 import UserSignUp from '../pages/user/UserSignUp'
 import Index from '../pages/Index'
+import UserMyPage from "../pages/user/UserMyPage";
+import UserManage from "../pages/user/UserManage";
+import StudyManage from "../pages/user/StudyManage";
 
 
 Vue.use(Router);
@@ -34,6 +37,12 @@ export default new Router({
       path: '/user', component: User,
       children: [{
         path: 'signUp', component: UserSignUp
+      }, {
+        path: 'myPage', component: UserMyPage
+      }, {
+        path: 'userManage', component: UserManage
+      }, {
+        path: 'studyManage', component: StudyManage
       }]
     },
     {
