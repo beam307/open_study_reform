@@ -2,12 +2,9 @@ package org.project.study.controller;
 
 import org.project.study.model.*;
 import org.project.study.service.StudyService;
-import org.project.study.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +15,6 @@ public class StudyController {
 
     @Autowired
     private StudyService studyService;
-
-    @Autowired
-    private UploadService uploadService;
 
     @PostMapping("/create")
     public ResponseEntity<String> saveStudy(@RequestBody Study study) {
@@ -70,24 +64,4 @@ public class StudyController {
         return studyService.getMajorRegionList();
     }
 
-    @PostMapping("/saveTempImage")
-    public ResponseEntity<String> saveTempImage(MultipartRequest multipartRequest) {
-        MultipartFile multipartFile = multipartRequest.getFile("studyImage");
-
-        String replaceFileName = uploadService.saveTempImage(multipartFile);
-        if (replaceFileName == null) {
-            return ResponseEntity.badRequest().body("");
-        }
-        return ResponseEntity.ok(replaceFileName);
-    }
-
-    @PostMapping("/deleteTempImage")
-    public Integer deleteTempImage(@RequestBody Map<String, String> body) {
-        String fileName = body.getOrDefault("fileName", null);
-
-        Integer result = uploadService.deleteTempImage(fileName);
-
-        return result;
-
-    }
 }

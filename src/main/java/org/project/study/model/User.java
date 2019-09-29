@@ -1,6 +1,7 @@
 package org.project.study.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -33,6 +34,8 @@ public class User implements UserDetails {
 
     private String pwd;
 
+    private String image;
+
     @JsonProperty
     private String name;
 
@@ -41,6 +44,9 @@ public class User implements UserDetails {
 
     @JsonProperty
     private Integer birth;
+
+    @JsonProperty
+    private String phone;
 
     @JsonProperty
     private String gender;
@@ -60,6 +66,14 @@ public class User implements UserDetails {
     @Column(name = "updated_at", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     public Date updatedAt;
+
+    @JsonGetter
+    public String getImage() {
+        if(this.image == null) {
+            return "M".equalsIgnoreCase(this.gender) ? "/static/img/male.jpg" : "/static/img/female.jpg";
+        }
+        return this.image;
+    }
 
     @Override
     @JsonIgnore
