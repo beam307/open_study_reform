@@ -20,8 +20,8 @@ import java.util.Date;
 @Setter
 @Table(name = "`user`")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE,
-                getterVisibility = JsonAutoDetect.Visibility.NONE,
-                isGetterVisibility = JsonAutoDetect.Visibility.NONE)
+        getterVisibility = JsonAutoDetect.Visibility.NONE,
+        isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class User implements UserDetails {
 
     @Id
@@ -32,6 +32,7 @@ public class User implements UserDetails {
     @JsonProperty
     private String email;
 
+    @Column(updatable = false)
     private String pwd;
 
     private String image;
@@ -69,8 +70,8 @@ public class User implements UserDetails {
 
     @JsonGetter
     public String getImage() {
-        if(this.image == null) {
-            return "M".equalsIgnoreCase(this.gender) ? "/static/img/male.jpg" : "/static/img/female.jpg";
+        if (this.image == null) {
+            return "M".equalsIgnoreCase(this.gender) ? "img/male.jpg" : "img/female.jpg";
         }
         return this.image;
     }

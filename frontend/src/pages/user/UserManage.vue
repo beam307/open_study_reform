@@ -21,7 +21,7 @@
           <v-flex xs12 sm4>
             <ProfileUpload :image="user.image" v-on:image="imageChange"></ProfileUpload>
           </v-flex>
-          <v-flex xs12 sm8 align-self-center mt-3 @click="test">
+          <v-flex xs12 sm8 align-self-center mt-3>
             <p class="subheading my-0 red--text px-3">회원님의 정면사진을 올려주세요!</p>
             <p class="subheading my-0 red--text px-3">상대방이 신뢰를 갖고 연락할 확률이 높아질 거에요</p>
           </v-flex>
@@ -69,7 +69,7 @@
         </v-layout>
         <v-layout wrap>
           <v-flex xs12 class="text-xs-right">
-            <v-btn outline>저장하기</v-btn>
+            <v-btn outline @click="saveUser">저장하기</v-btn>
           </v-flex>
         </v-layout>
       </v-tab-item>
@@ -108,11 +108,13 @@
             ProfileUpload
         },
         methods: {
-            test() {
-                console.log(this.user.image);
+            imageChange(fileName) {
+                this.user.image = fileName ? fileName : '';
             },
-            imageChange(fileName, type) {
-                this.user.image = type ?  fileName : "";
+            saveUser() {
+                this.$http.post('/api/user/update', this.user)
+                    .then(() => alert("저장 되었습니다."))
+                    .catch(e => console.log(e));
             }
         },
         created() {

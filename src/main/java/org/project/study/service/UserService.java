@@ -23,6 +23,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void update(User user) {
+        userRepository.save(user);
+    }
+
     public User getUser(Long id) {
         User user = userRepository.findById(id).get();
         user.setPwd(null);
