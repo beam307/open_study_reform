@@ -1,5 +1,7 @@
 package org.project.study.service;
 
+import org.project.study.model.UserAdditional;
+import org.project.study.repository.UserAdditionalRepository;
 import org.project.study.repository.UserRepository;
 import org.project.study.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class UserService {
     UserRepository userRepository;
 
     @Autowired
+    UserAdditionalRepository userAdditionalRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     public void create(User user) {
@@ -27,10 +32,18 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateAdditional(UserAdditional userAdditional) {
+        userAdditionalRepository.save(userAdditional);
+    }
+
     public User getUser(Long id) {
         User user = userRepository.findById(id).get();
         user.setPwd(null);
         return user;
+    }
+
+    public UserAdditional getUserAdditional(Long id) {
+        return userAdditionalRepository.findByUserId(id);
     }
 
     public Optional<User> getUserByEmail(String email) {

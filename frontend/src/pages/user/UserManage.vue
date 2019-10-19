@@ -74,7 +74,51 @@
         </v-layout>
       </v-tab-item>
       <v-tab-item value="additional">
-        부가정보
+        <v-container>
+          <v-subheader class="font-weight-bold">관심카테고리</v-subheader>
+          <Category v-model="userAdditional.categories"></Category>
+          <v-subheader class="font-weight-bold">관심 지역</v-subheader>
+          <v-layout wrap>
+            <v-flex xs2 px-2 py-1>
+              <v-subheader>지역</v-subheader>
+            </v-flex>
+            <v-flex xs5 px-2 py-1>
+              <v-select
+                :items="majorRegions"
+                label="지역 대분류"
+                solo
+                v-model="userAdditional.majorRegion"
+                v-on:change="minorRegionChoice(userAdditional.majorRegion)"
+              ></v-select>
+            </v-flex>
+            <v-flex xs5 px-2 py-1>
+              <v-select
+                :items="minorRegions"
+                label="지역 소분류"
+                solo
+                v-model="userAdditional.minorRegion"
+              ></v-select>
+            </v-flex>
+          </v-layout>
+          <v-layout wrap>
+            <v-flex xs4 sm2 px-2 py-1>
+              <v-subheader style="align-items:flex-end">소개글</v-subheader>
+            </v-flex>
+            <v-flex xs8 sm10 px-2 py-1>
+              <v-textarea
+                outline
+                rows="10"
+                no-resize
+                v-model="userAdditional.introduce"
+              ></v-textarea>
+            </v-flex>
+          </v-layout>
+          <v-layout wrap>
+            <v-flex xs12 class="text-xs-right">
+              <v-btn outline @click="saveUserAdditional">저장하기</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </v-tab-item>
       <v-tab-item value="password">
         비밀번호
@@ -88,6 +132,7 @@
 
 <script>
     import ProfileUpload from "../../components/common/ProfileUpload";
+    import Category from "../../components/common/Category";
 
     export default {
         data() {
@@ -101,11 +146,22 @@
                     birth: null,
                     image: "",
                     phone: ""
+                },
+                majorRegions: [],
+                minorRegions: [],
+                minorRegionAll: [],
+                userAdditional: {
+                    majorRegion: 0,
+                    minorRegion: 0,
+                    categories: [],
+                    introduce: '',
+                    userId: 0,
                 }
             };
         },
         components: {
-            ProfileUpload
+            ProfileUpload,
+            Category
         },
         methods: {
             imageChange(fileName) {
@@ -115,14 +171,71 @@
                 this.$http.post('/api/user/update', this.user)
                     .then(() => alert("저장 되었습니다."))
                     .catch(e => console.log(e));
-            }
+            },
+            saveUserAdditional() {
+                this.$http.post('/api/user/additional', this.userAdditional)
+                    .then(() => alert("저장 되었습니다."))
+                    .catch(e => console.log(e));
+            },
+            minorRegionChoice(code) {
+                if (code == 40) {
+                    this.minorRegions = [{text: '전국', value: 4000}];
+                    return;
+                }
+                let minor = this.minorRegionAll[code];
+                this.minorRegions = minor.map(r => {
+                    return {
+                        text: r.name,
+                        value: r.id
+                    }
+                });
+            },
         },
         created() {
-            this.$http.get("/api/user/me").then(user => {
-                this.user = user.data;
-            }).catch(e => {
+            this.$http.get("/api/user/me")
+                .then(user => {
+                    this.user = user.data;
+                    this.userAdditional.userId = this.user.id;
+                }).catch(e => {
                 console.log(e);
-            })
+            });
+
+            this.$http.get("/api/user/additional")
+                .then(user => {
+                    if (user.data) {
+                        this.userAdditional = user.data;
+                    }
+                }).catch(e => {
+                console.log(e);
+            });
+
+            this.$http.get('/api/study/majorRegion')
+                .then((result) => {
+                    this.majorRegions = result.data.map(r => {
+                        return {
+                            text: r.name,
+                            value: r.id
+                        }
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+
+            this.$http.get('/api/study/minorRegion')
+                .then((result) => {
+                    this.minorRegionAll = result.data;
+                    let minor = this.minorRegionAll[this.userAdditional.majorRegion];
+                    this.minorRegions = minor.map(r => {
+                        return {
+                            text: r.name,
+                            value: r.id
+                        }
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                });
         }
     }
 </script>

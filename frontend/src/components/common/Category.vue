@@ -6,7 +6,7 @@
         <v-layout wrap>
           <v-flex xs12 sm4 v-for="item in category.items" :key="item.id">
             <v-checkbox :label="item.name" :disabled="disabled(item.id)" :value="item.id"
-                        v-model="checked"></v-checkbox>
+                        v-model="internalValue"></v-checkbox>
           </v-flex>
         </v-layout>
       </v-card>
@@ -15,44 +15,45 @@
 </template>
 
 <script>
-  import _ from 'lodash'
+    import _ from 'lodash'
 
-  export default {
-    data() {
-      return {
-        categories: [],
-      }
-    },
-    created() {
-      this.$http.get('/api/study/category')
-        .then((result) => {
-          this.categories = _.values(_.mapValues(result.data, (i) => {
+    export default {
+        props: ['value'],
+        data() {
             return {
-              title: i[0].title,
-              items: i
+                categories: [],
             }
-          }));
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-    },
-    methods: {
-      disabled(id) {
-        return this.checked.length>=5 && !this.checked.includes(id)
-      }
-    },
-    computed: {
-      checked: {
-        get () {
-          return this.$store.state.study.categoryIds
         },
-        set (value) {
-          this.$store.commit('study/setCategories', value)
+        created() {
+            this.$http.get('/api/study/category')
+                .then((result) => {
+                    this.categories = _.values(_.mapValues(result.data, (i) => {
+                        return {
+                            title: i[0].title,
+                            items: i
+                        }
+                    }));
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
+        },
+        methods: {
+            disabled(id) {
+                return this.internalValue.length >= 5 && !this.internalValue.includes(id)
+            }
+        },
+        computed: {
+            internalValue: {
+                get() {
+                    return this.value;
+                },
+                set(value) {
+                    this.$emit('input', value);
+                }
+            }
         }
-      }
     }
-  }
 </script>
 
 <style scoped>
