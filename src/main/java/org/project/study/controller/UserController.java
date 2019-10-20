@@ -1,5 +1,6 @@
 package org.project.study.controller;
 
+import org.project.study.exception.PasswordValidateException;
 import org.project.study.model.User;
 import org.project.study.model.UserAdditional;
 import org.project.study.service.UserService;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -46,7 +49,6 @@ public class UserController {
 
     @PostMapping("/additional")
     public void updateAdditional(@RequestBody UserAdditional userAdditional) {
-        System.err.println(userAdditional);
         userService.updateAdditional(userAdditional);
     }
 
@@ -60,6 +62,21 @@ public class UserController {
         UserAdditional userAdditional = userService.getUserAdditional(user.getId());
 
         return ResponseEntity.ok(userAdditional);
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity updatePassword(@AuthenticationPrincipal User user, @RequestBody Map<String, String> password) {
+        try {
+            userService.updatePassword(user.getId(), password);
+            return ResponseEntity.ok().build();
+        } catch (PasswordValidateException e) {
+            return ResponseEntity.status(400).build();
+        }
+    }
+
+    @PostMapping("leave")
+    public void leaveUser(@AuthenticationPrincipal User user) {
+        userService.leaveUser(user.getId());
     }
 
 }

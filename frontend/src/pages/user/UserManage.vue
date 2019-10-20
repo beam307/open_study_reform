@@ -73,6 +73,7 @@
           </v-flex>
         </v-layout>
       </v-tab-item>
+
       <v-tab-item value="additional">
         <v-container>
           <v-subheader class="font-weight-bold">관심카테고리</v-subheader>
@@ -100,11 +101,9 @@
               ></v-select>
             </v-flex>
           </v-layout>
+          <v-subheader class="font-weight-bold">소개글</v-subheader>
           <v-layout wrap>
-            <v-flex xs4 sm2 px-2 py-1>
-              <v-subheader style="align-items:flex-end">소개글</v-subheader>
-            </v-flex>
-            <v-flex xs8 sm10 px-2 py-1>
+            <v-flex xs12 px-2 py-1>
               <v-textarea
                 outline
                 rows="10"
@@ -120,11 +119,40 @@
           </v-layout>
         </v-container>
       </v-tab-item>
+
       <v-tab-item value="password">
-        비밀번호
+        <v-subheader class="body-2">현재 비밀번호</v-subheader>
+        <v-layout wrap>
+          <v-flex xs12 sm4 px-3>
+            <v-text-field type="password" single-line v-model="password.old"></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-subheader class="body-2">새로운 비밀번호</v-subheader>
+        <v-layout wrap>
+          <v-flex xs12 sm4 px-3>
+            <v-text-field type="password" single-line v-model="password.new"></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-subheader class="body-2">새로운 비밀번호 확인</v-subheader>
+        <v-layout wrap>
+          <v-flex xs12 sm4 px-3>
+            <v-text-field type="password" single-line v-model="password.newCheck"></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout wrap>
+          <v-flex xs12 class="text-xs-right">
+            <v-btn outline @click="savePassword">변경하기</v-btn>
+          </v-flex>
+        </v-layout>
       </v-tab-item>
+
       <v-tab-item value="leave">
-        탈퇴
+        <v-layout wrap>
+          <v-flex xs12>
+            <v-btn outline @click="leaveUser">탈퇴하기</v-btn>
+          </v-flex>
+        </v-layout>
+        <v-subheader class="body-2">탈퇴후 복구는 불가능합니다.</v-subheader>
       </v-tab-item>
     </v-tabs>
   </v-container>
@@ -133,10 +161,14 @@
 <script>
     import ProfileUpload from "../../components/common/ProfileUpload";
     import Category from "../../components/common/Category";
+    import {mapActions} from 'vuex'
 
     export default {
         data() {
             return {
+                majorRegions: [],
+                minorRegions: [],
+                minorRegionAll: [],
                 user: {
                     id: 0,
                     name: "",
@@ -147,15 +179,17 @@
                     image: "",
                     phone: ""
                 },
-                majorRegions: [],
-                minorRegions: [],
-                minorRegionAll: [],
                 userAdditional: {
                     majorRegion: 0,
                     minorRegion: 0,
                     categories: [],
                     introduce: '',
                     userId: 0,
+                },
+                password: {
+                    old: '',
+                    new: '',
+                    newCheck: ''
                 }
             };
         },
@@ -164,6 +198,12 @@
             Category
         },
         methods: {
+            ...mapActions({
+                setAuthenticated: 'user/setAuthenticated',
+                setAccessToken: 'user/setAccessToken',
+                setRefreshToken: 'user/setRefreshToken',
+                resetProfile: 'user/resetProfile'
+            }),
             imageChange(fileName) {
                 this.user.image = fileName ? fileName : '';
             },
@@ -176,6 +216,36 @@
                 this.$http.post('/api/user/additional', this.userAdditional)
                     .then(() => alert("저장 되었습니다."))
                     .catch(e => console.log(e));
+            },
+            savePassword() {
+                if (this.password.new != this.password.newCheck) {
+                    alert("새로운 비밀번호 확인이 다릅니다.");
+                    return false;
+                }
+                this.$http.post('/api/user/password', this.password)
+                    .then(() => alert("비밀번호가 변경되었습니다."))
+                    .catch(e => {
+                        console.log(e.response);
+                        if (e.response.status == 400) {
+                            alert("이전 비밀번호가 다릅니다.");
+                        } else {
+                            alert("에러가 발생하였습니다.");
+                        }
+                    });
+            },
+            leaveUser() {
+                let result = confirm("정말 탈퇴하시겠습니까? 탈퇴 후 복구는 불가능합니다.");
+                if (result) {
+                    this.$http.post('/api/user/leave')
+                        .then(() => {
+                            alert("회원탈퇴하였습니다. 감사합니다.");
+                            this.logout();
+                        })
+                        .catch(e => {
+                            console.log(e.response);
+                            alert("회원탈퇴시 에러가 발생하였습니다.");
+                        });
+                }
             },
             minorRegionChoice(code) {
                 if (code == 40) {
@@ -190,6 +260,15 @@
                     }
                 });
             },
+            logout() {
+                this.setAuthenticated(false);
+                this.setAccessToken(null);
+                this.setRefreshToken(null);
+                window.localStorage.removeItem("access-token");
+                window.localStorage.removeItem("refresh-token");
+                this.resetProfile();
+                this.$router.push("/");
+            }
         },
         created() {
             this.$http.get("/api/user/me")
@@ -225,13 +304,16 @@
             this.$http.get('/api/study/minorRegion')
                 .then((result) => {
                     this.minorRegionAll = result.data;
-                    let minor = this.minorRegionAll[this.userAdditional.majorRegion];
-                    this.minorRegions = minor.map(r => {
-                        return {
-                            text: r.name,
-                            value: r.id
-                        }
-                    });
+                    if (this.userAdditional.majorRegion) {
+                        let minor = this.minorRegionAll[this.userAdditional.majorRegion];
+                        this.minorRegions = minor.map(r => {
+                            return {
+                                text: r.name,
+                                value: r.id
+                            }
+                        });
+                    }
+
                 })
                 .catch(e => {
                     console.log(e);

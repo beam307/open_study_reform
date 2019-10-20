@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "`user`")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
@@ -32,7 +30,6 @@ public class User implements UserDetails {
     @JsonProperty
     private String email;
 
-    @Column(updatable = false)
     private String pwd;
 
     private String image;

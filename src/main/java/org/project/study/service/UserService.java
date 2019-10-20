@@ -1,5 +1,6 @@
 package org.project.study.service;
 
+import org.project.study.exception.PasswordValidateException;
 import org.project.study.model.UserAdditional;
 import org.project.study.repository.UserAdditionalRepository;
 import org.project.study.repository.UserRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,18 +25,39 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void create(User user) {
         String pwd = user.getPwd();
-        user.setPwd(pwdEncode(pwd));
+        user.setPwd(this.pwdEncode(pwd));
         userRepository.save(user);
     }
 
+    @Transactional
     public void update(User user) {
+        User defaultUser = userRepository.findById(user.getId()).get();
+        user.setPwd(defaultUser.getPwd());
         userRepository.save(user);
     }
 
     public void updateAdditional(UserAdditional userAdditional) {
         userAdditionalRepository.save(userAdditional);
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, Map<String, String> password) throws PasswordValidateException {
+
+        User user = userRepository.findById(userId).get();
+        if (!passwordEncoder.matches(password.getOrDefault("old", ""), user.getPassword())) {
+            throw new PasswordValidateException();
+        }
+        user.setPwd(this.pwdEncode(password.get("new")));
+        userRepository.save(user);
+
+    }
+
+    @Transactional
+    public void leaveUser(Long userId) {
+        userRepository.updateUserActive(userId);
     }
 
     public User getUser(Long id) {

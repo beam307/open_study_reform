@@ -31,7 +31,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 
         User user = userService.getUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
-        if (!encoder.matches(pwd, user.getPwd())) {
+        if (!encoder.matches(pwd, user.getPwd()) || !user.getActive()) {
             throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
         }
 
