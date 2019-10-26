@@ -35,12 +35,13 @@ public class FormAwareAuthenticationSuccessHandler implements AuthenticationSucc
         User user = (User) authentication.getPrincipal();
         JwtToken accessToken = null;
         JwtToken refreshToken = null;
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
         try {
             accessToken = tokenFactory.createAccessJwtToken(user);
             refreshToken = tokenFactory.createRefreshToken(user);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             mapper.writeValue(response.getWriter(), ErrorResponse.of(e.getMessage(), ErrorCode.ENCRYPT_ERROR, HttpStatus.INTERNAL_SERVER_ERROR));
         }
 
@@ -49,7 +50,6 @@ public class FormAwareAuthenticationSuccessHandler implements AuthenticationSucc
         tokenMap.put("refreshToken", refreshToken.getToken());
 
         response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         mapper.writeValue(response.getWriter(), tokenMap);
 
     }

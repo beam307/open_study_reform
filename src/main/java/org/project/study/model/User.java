@@ -32,6 +32,7 @@ public class User implements UserDetails {
 
     private String pwd;
 
+    @JsonProperty
     private String image;
 
     @JsonProperty

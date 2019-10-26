@@ -1,17 +1,11 @@
 <template>
   <v-container fluid class="px-0 study-view">
-    <v-carousel height="400">
-      <template v-if="study.meta.images.length > 0">
+    <v-carousel height="400" cycle>
         <v-carousel-item
           v-for="(image,i) in study.meta.images"
           :key="i"
           :src="require(`../../assets/temp/${image}`)"
         ></v-carousel-item>
-      </template>
-      <v-carousel-item
-        v-else
-        :src="require('../../assets/img/study_default.jpg')"
-      ></v-carousel-item>
     </v-carousel>
     <v-layout wrap mt-4>
       <v-flex xs4 sm2>
@@ -84,7 +78,7 @@
     <v-divider></v-divider>
     <ReplyReg></ReplyReg>
     <v-divider></v-divider>
-    <ReplyList :studyWriterId = study.studyWriterId></ReplyList>
+    <ReplyList :studyWriterId=study.studyWriterId></ReplyList>
   </v-container>
 </template>
 
@@ -118,6 +112,9 @@
                 .then((result) => {
                     this.study = result.data;
                     this.study.meta = JSON.parse(this.study.meta);
+                    if(!this.study.meta.images.length) {
+                        this.study.meta.images.push('study_default.jpg');
+                    }
                 })
                 .catch((e) => {
                     console.log(e);
@@ -150,7 +147,7 @@
   }
 
   .study-view textarea {
-    color: rgba(0,0,0,0.54) !important;
+    color: rgba(0, 0, 0, 0.54) !important;
     font-size: 14px;
     font-weight: 500;
   }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -54,6 +55,9 @@ public class Study {
     private Integer status;
 
     @Transient
+    private Map<String, Object> writer;
+
+    @Transient
     private List<Integer> categoryIds;
 
     @ManyToMany
@@ -62,7 +66,7 @@ public class Study {
             joinColumns = @JoinColumn(name = "study_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    @BatchSize(size = 5)
+    @BatchSize(size = 20)
     private List<Category> categories;
 
     @OneToOne

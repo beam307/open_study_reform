@@ -10,8 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,9 @@ public class StudyService {
 
     @Autowired
     StudyCategoryRepository studyCategoryRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public void insertStudy(Study study) {
         studyRepository.saveAndFlush(study);
@@ -72,6 +77,13 @@ public class StudyService {
     public Map<String, Object> getStudyList(SearchDTO searchDTO) {
         Page<Study> studies = this.searchStudy(searchDTO);
 
+        List<Long> writerIds = studies.stream().map(s -> s.getStudyWriterId()).collect(Collectors.toList());
+        List<User> users = userRepository.findByIdIn(writerIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(u -> u.getId(), Function.identity()));
+        studies.getContent().forEach(study -> {
+            User user = userMap.get(study.getStudyWriterId());
+            study.setWriter(ImmutableMap.of("id", user.getId(), "name", user.getNickname(), "image", user.getImage()));
+        });
         return ImmutableMap.of("studies", studies.getContent(), "total", studies.getTotalPages());
     }
 
