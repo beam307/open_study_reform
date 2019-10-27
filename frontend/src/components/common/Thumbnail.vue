@@ -1,18 +1,27 @@
 <template>
   <v-card class="thumbnail" @click="goToStudy">
     <div>
-      <div class="overlay"></div>
-      <v-img v-if="study.meta.images.length > 0" :src="require(`@/assets/temp/${study.meta.images[0]}`)" contain
-             max-width="100%" max-height="150"></v-img>
-      <v-img v-else :src="require('@/assets/temp/study_default.jpg')" contain max-width="100%" max-height="150"></v-img>
+      <div class="overlay">
+        <v-subheader class="subtitle-1 font-weight-bold white--text study-title">{{study.name}}</v-subheader>
+      </div>
+      <img class="thumbnail-image" v-if="study.meta.images.length > 0"
+           :src="require(`@/assets/temp/${study.meta.images[0]}`)">
+      <img class="thumbnail-image" v-else :src="require('@/assets/temp/study_default.jpg')">
+      <div class="icon">
+        <v-icon class="i">remove_red_eye</v-icon>
+        <span class="thumbnail-info"> {{study.viewCnt}}</span></div>
+      <div class="icon">
+        <v-icon class="i">person</v-icon>
+        <span class="thumbnail-info"> {{study.maxMemberCnt}}</span></div>
     </div>
-    <v-card-title primary-title class="pt-5">
-      <h3 class="subtitle-1">{{study.writer.name}}</h3>
-      <v-subheader>{{study.name}}</v-subheader>
-    </v-card-title>
     <div class="preview">
       <img :src="require(`@/assets/${study.writer.image}`)"/>
     </div>
+    <v-card-title primary-title class="pt-4 pb-0 justify-center thumbnail-description">
+      <h3 class="body-2 font-weight-bold">{{study.writer.name}}</h3>
+      <h3 class="body-2 font-weight-bold">{{study.majorRegion.name}} {{study.minorRegion.name}}</h3>
+      <h3 class="body-2">시작일 : {{study.startDate | date('YYYY-MM-DD')}}</h3>
+    </v-card-title>
     <v-card-actions class="justify-center">
       <v-btn class="caption" dark small color="orange" @click="goToStudy">자세히보기</v-btn>
     </v-card-actions>
@@ -20,6 +29,7 @@
 </template>
 
 <script>
+
     export default {
         props: ['study'],
         data() {
@@ -34,10 +44,17 @@
 </script>
 
 <style scoped>
+
+  .thumbnail .thumbnail-image {
+    width: 100%;
+    height: 150px;
+    max-height: 150px;
+  }
+
   .thumbnail .preview {
     position: absolute;
     left: 50%;
-    top: 55%;
+    top: 50%;
     z-index: 5;
     webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
@@ -60,6 +77,36 @@
     position: absolute;
     height: 150px;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .thumbnail .study-title {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    line-height: 1;
+  }
+
+  .thumbnail .icon {
+    position: relative;
+    top: 0;
+    right: 2px;
+    font-size: 15px;
+    padding-left: 8px;
+    color: #555;
+    float: right;
+  }
+
+  .thumbnail .icon .i {
+    font-size: 20px !important;
+  }
+
+  .thumbnail .icon .thumbnail-info {
+    font-size: 15px;
+  }
+
+  .thumbnail .thumbnail-description {
+    flex-direction: column;
+    width: 100%;
   }
 </style>

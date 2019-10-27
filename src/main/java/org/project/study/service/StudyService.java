@@ -88,7 +88,10 @@ public class StudyService {
     }
 
     public Study getStudy(Long id) {
-        return studyRepository.findById(id).orElse(null);
+        Study study = studyRepository.findById(id).orElse(null);
+        User user = userRepository.findById(study.getStudyWriterId()).get();
+        study.setWriter(ImmutableMap.of("id", user.getId(), "name", user.getNickname(), "image", user.getImage()));
+        return study;
     }
 
     private Page<Study> searchStudy(SearchDTO searchDTO) {

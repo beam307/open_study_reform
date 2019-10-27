@@ -2,42 +2,42 @@
   <v-card class="mb-5" color="grey lighten-4">
     <v-layout wrap>
       <v-flex xs4 sm2 px-2 py-1>
-        <v-subheader style="align-items:flex-end">연령대</v-subheader>
+        <v-subheader class="align-content-end">연령대</v-subheader>
       </v-flex>
       <v-flex xs8 sm10 px-2 py-1>
         <v-layout wrap>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="10"
                         :label="'10대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="20"
                         :label="'20대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="30"
                         :label="'30대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="40"
                         :label="'40대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="50"
                         :label="'50대'"
             ></v-checkbox>
           </v-flex>
           <v-flex xs12 sm2>
-            <v-checkbox v-model="targetAge"
+            <v-checkbox v-model="study.meta.age"
                         value="0"
                         :label="'무관'"
             ></v-checkbox>
@@ -61,13 +61,14 @@
         >
           <template v-slot:activator="{ on }">
             <v-text-field
-              v-model="startDate"
+              v-model="study.startDate"
               readonly
               v-on="on"
               class="mt-1 pt-0"
             ></v-text-field>
           </template>
-          <v-date-picker reactive no-title dark v-model="startDate" @input="startDatePicker = false"></v-date-picker>
+          <v-date-picker reactive no-title dark v-model="study.startDate"
+                         @input="startDatePicker = false"></v-date-picker>
         </v-menu>
       </v-flex>
     </v-layout>
@@ -157,7 +158,7 @@
         <v-subheader>선택된시간</v-subheader>
       </v-flex>
       <v-flex xs10 px-2 py-1>
-        <v-subheader v-for="(time, index) in times" :key="index">{{time}}</v-subheader>
+        <v-subheader v-for="(time, index) in study.meta.time" :key="index">{{time}}</v-subheader>
       </v-flex>
     </v-layout>
     <v-layout wrap>
@@ -166,7 +167,7 @@
       </v-flex>
       <v-flex xs10 px-2 py-1>
         <v-text-field
-          v-model="maxMemberCnt"
+          v-model="study.maxMemberCnt"
           class="mt-1 pt-0"
         ></v-text-field>
       </v-flex>
@@ -176,9 +177,9 @@
 
 <script>
     import Category from '../../../components/common/Category'
-    import {mapGetters, mapMutations} from 'vuex'
 
     export default {
+        props: ['study'],
         data() {
             return {
                 week: null,
@@ -195,45 +196,14 @@
             Category
         },
         methods: {
-            ...mapMutations({ages: 'study/setTime'}),
             addTime() {
                 if (this.week != null && this.startTime != null && this.endTime != null) {
-                    let time = this.times;
                     let value = `${this.startTime} ~ ${this.endTime} ${this.week}`;
-                    time.push(value);
-                    this.ages(time);
+                    this.study.meta.time.push(value);
                 }
 
             }
 
-        },
-        computed: {
-            ...mapGetters({times: 'study/time'}),
-
-            startDate: {
-                get() {
-                    return this.$store.state.study.startDate
-                },
-                set(value) {
-                    this.$store.commit('study/setStartDate', value)
-                }
-            },
-            targetAge: {
-                get() {
-                    return this.$store.state.study.meta.age;
-                },
-                set(value) {
-                    this.$store.commit('study/setAge', value)
-                }
-            },
-            maxMemberCnt: {
-                get() {
-                    return this.$store.state.study.maxMemberCnt;
-                },
-                set(value) {
-                    this.$store.commit('study/setMaxMemberCnt', value)
-                }
-            }
         }
     }
 </script>

@@ -123,7 +123,7 @@
                     console.log(e);
                 });
 
-            this.list(null);
+            this.list();
         },
 
         methods: {

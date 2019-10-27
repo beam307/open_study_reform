@@ -1,5 +1,5 @@
 <template>
-  <v-footer dark absolute height="auto">
+  <v-footer v-once dark absolute height="auto">
     <v-layout column align-center>
     <p>경기도 성남시</p>
     <p>beam307@naver.com <u></u> 010-xxxx-xxxx</p>

@@ -1,5 +1,6 @@
 <template>
-  <v-timeline align-top dense>
+  <v-timeline align-top dense v-if="replies.length">
+    <v-divider></v-divider>
     <v-timeline-item color="black" small v-for="reply in replies" :key="reply.id">
       <v-layout pt-3>
         <v-flex xs6 sm3>

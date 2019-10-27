@@ -3,7 +3,7 @@
     <v-layout mt-3 mb-5 justify-center>
       <v-flex xs12>
         <Header/>
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
         <Footer/>
       </v-flex>
     </v-layout>

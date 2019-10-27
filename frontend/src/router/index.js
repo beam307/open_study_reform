@@ -5,7 +5,7 @@ import store from '../store/store'
 import User from '../pages/user/User'
 import Study from '../pages/study/Study'
 import StudyList from '../pages/study/StudyList'
-import StudyRegister from '../pages/study/register/StudyRegister'
+import StudyEdit from '../pages/study/edit/StudyEdit'
 import StudyView from '../pages/study/StudyView'
 import login from '../pages/login/Login'
 import UserSignUp from '../pages/user/UserSignUp'
@@ -50,7 +50,7 @@ export default new Router({
       children: [{
         path: 'list', name: 'studyList', component: StudyList,
       }, {
-        path: 'register', component: StudyRegister,
+        path: 'edit/:id', name: 'studyEdit', component: StudyEdit,
         beforeEnter: (to, from, next) => {
           if (store.getters['user/authenticated']) {
             next();
