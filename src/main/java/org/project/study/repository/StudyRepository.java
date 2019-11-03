@@ -14,4 +14,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByIdInAndMajorRegionId(List<Long> ids, Integer region, Pageable pageable);
 
     Page<Study> findByMajorRegionId(Integer region, Pageable pageable);
+
+    List<Study> findByIdIn(List<Long> ids);
+
+    List<Study> findByStudyWriterId(Long userId);
+
+    Study findByIdAndStudyWriterId(Long studyId, Long userId);
 }

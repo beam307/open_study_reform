@@ -4,19 +4,21 @@
       <v-carousel-item
         v-for="(image,i) in study.meta.images"
         :key="i"
+        v-if="image"
         :src="require(`../../assets/temp/${image}`)"
       ></v-carousel-item>
       <div class="user">
         <div class="user-img">
-          <img :src="require(`@/assets/${study.writer.image}`)">
+          <img v-if="study.writer.image " :src="require(`@/assets/${study.writer.image}`)">
         </div>
         <div class="user-info">
           <h3 class="title font-weight-black white--text">{{study.name}}</h3>
           <h4 class="subheading font-weight-bold white--text">{{study.writer.name}}</h4>
         </div>
         <div class="study-additional">
-          <div class="view-icon">
-            <v-icon>star</v-icon>
+          <div class="view-icon py-0">
+            <v-icon v-if="bookmark" large class="bookmark" @click="setBookmark">star</v-icon>
+            <v-icon v-else large class="bookmark font-weight-light" @click="setBookmark">star_border</v-icon>
           </div>
           <div class="uniqueCategories">
             <span class="uniqueCategory" v-for="category in study.uniqueCategories" :key="category.id">{{category.title}}</span>
@@ -94,10 +96,13 @@
     </v-layout>
     <v-layout wrap>
       <v-flex xs12 sm12 class="text-xs-right">
-        <v-btn :to="{ name: 'studyEdit', params: { id: this.$route.params.id }}" :key="this.$route.fullPath"
-               v-if="study.studyWriterId == userId"
-               color="error">수정
-        </v-btn>
+        <template v-if="study.studyWriterId == userId">
+          <v-btn @click="finish" color="info">완료</v-btn>
+          <v-btn @click="studyDelete" color="error">삭제</v-btn>
+          <v-btn :to="{ name: 'studyEdit', params: { id: this.$route.params.id }}"
+                 color="warning">수정
+          </v-btn>
+        </template>
         <v-btn to="/study/list" color="success">목록</v-btn>
       </v-flex>
     </v-layout>
@@ -128,11 +133,104 @@
                     },
                     startDate: null,
                     maxMemberCnt: 0,
-                    introduce: ''
-                }
+                    introduce: '',
+                    writer: {
+                        id: 0,
+                        name: '',
+                        image: ''
+                    }
+                },
+                bookmarkDone: true,
+                bookmark: false,
             }
         },
-        methods: {},
+        methods: {
+            setBookmark() {
+                if (this.bookmarkDone) {
+                    this.bookmarkDone = false;
+                    this.$authorizedApi.post('/api/graph/like', {studyId: this.$route.params.id})
+                        .then((r) => {
+                            this.bookmark = r.data;
+                            if (r.data) {
+                                this.$swal.fire({
+                                    type: "info",
+                                    timer: 700,
+                                    text: '해당스터디를 즐겨찾기하였습니다.',
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                this.$swal.fire({
+                                    type: "info",
+                                    timer: 700,
+                                    text: '해당스터디를 즐겨찾기를 취소하였습니다.',
+                                    showConfirmButton: false
+                                });
+                            }
+                            this.bookmarkDone = true;
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            this.bookmarkDone = true;
+                        });
+                }
+            },
+            finish() {
+                this.$swal.fire({
+                    title: '정말 완료하시겠습니까?',
+                    text: "완료 후 복구는 불가능합니다.",
+                    type: 'warning',
+                    showCancelButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        this.$authorizedApi.post(`/api/study/${this.$route.params.id}/finish`)
+                            .then((r) => {
+                                this.$swal.fire({
+                                    type: "info",
+                                    timer: 1500,
+                                    text: '해당스터디를 완료했습니다.'
+                                });
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                                this.$swal.fire({
+                                    type: "error",
+                                    timer: 1500,
+                                    text: '완료하는데 에러가 발생하였습니다.'
+                                });
+                            });
+                    }
+                })
+
+            },
+            studyDelete() {
+                this.$swal.fire({
+                    title: '정말 완료하시겠습니까?',
+                    text: "완료 후 복구는 불가능합니다.",
+                    type: 'warning',
+                    showCancelButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        this.$authorizedApi.post(`/api/study/${this.$route.params.id}/delete`)
+                            .then((r) => {
+                                this.$swal.fire({
+                                    type: "info",
+                                    timer: 1500,
+                                    text: '해당스터디를 삭제했습니다.'
+                                });
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                                this.$swal.fire({
+                                    type: "error",
+                                    timer: 1500,
+                                    text: '삭제하는데 에러가 발생하였습니다.'
+                                });
+                            });
+                    }
+                });
+
+            }
+        },
         created() {
             this.$http.get(`/api/study/${this.$route.params.id}`)
                 .then((result) => {
@@ -146,6 +244,23 @@
                 .catch((e) => {
                     console.log(e);
                 });
+
+            if (this.bookmarkDone) {
+                this.bookmarkDone = false;
+                this.$http.get('/api/graph/like', {
+                    params: {
+                        studyId: this.$route.params.id
+                    }
+                })
+                    .then((r) => {
+                        this.bookmark = r.data.like;
+                        this.bookmarkDone = true;
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                        this.bookmarkDone = true;
+                    });
+            }
         },
         computed: {
             ...mapGetters({userId: 'user/id'}),
@@ -157,26 +272,31 @@
     }
 </script>
 
-<style>
-  .study-view .v-carousel__next .v-btn.v-btn--icon {
-    background: #999;
+<style lang="scss">
+  .study-view {
+
+    .v-carousel__next .v-btn.v-btn--icon {
+      background: #999;
+    }
+
+    .v-carousel__prev .v-btn.v-btn--icon {
+      background: #999;
+    }
+
+    .v-image__image--cover {
+      background-size: contain !important;
+    }
+
+    textarea {
+      color: rgba(0, 0, 0, 0.54) !important;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
   }
 
-  .study-view .v-carousel__prev .v-btn.v-btn--icon {
-    background: #999;
-  }
-
-  .study-view .v-image__image--cover {
-    background-size: contain !important;
-  }
-
-  .study-view textarea {
-    color: rgba(0, 0, 0, 0.54) !important;
-    font-size: 14px;
-    font-weight: 500;
-  }
 </style>
-<style scoped>
+<style scoped lang="scss">
   .user {
     position: absolute;
     display: flex;
@@ -185,56 +305,60 @@
     background: rgba(2, 9, 31, 0.3);
     padding: 16px;
     z-index: 55;
-  }
 
-  .user .user-img {
-    height: auto;
-    overflow: hidden;
-  }
+    .user-img {
+      height: auto;
+      overflow: hidden;
+    }
 
-  .user .user-img img {
-    z-index: 5;
-    width: 100px;
-    height: 100px;
-    max-width: 100px;
-    max-height: 100px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    border: 2px solid #fff;
-  }
+    .user-img img {
+      z-index: 5;
+      width: 100px;
+      height: 100px;
+      max-width: 100px;
+      max-height: 100px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
 
-  .user .user-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 12px;
-  }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 12px;
+    }
 
-  .user .user-info h4 {
-    margin-top: 10px;
-  }
+    .user-info h4 {
+      margin-top: 10px;
+    }
 
-  .user .study-additional {
-    position: absolute;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 25px 0px;
-    height: 100%;
-    top: 0;
-  }
+    .study-additional {
+      position: absolute;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 25px 0px;
+      height: 100%;
+      top: 0;
+    }
 
-  .user .view-icon {
-    text-align: right;
-    padding: 5px;
-  }
+    .view-icon {
+      text-align: right;
+      padding: 5px;
+    }
 
-  .user .uniqueCategory {
-    color: white;
-    border: 1px solid white;
-    padding: 4px 15px;
-    margin: 0 5px;
+    .uniqueCategory {
+      color: white;
+      border: 1px solid white;
+      padding: 4px 15px;
+      margin: 0 5px;
+    }
+
+    .bookmark {
+      cursor: pointer;
+    }
   }
 </style>

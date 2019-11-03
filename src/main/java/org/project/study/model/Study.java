@@ -1,8 +1,9 @@
 package org.project.study.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
@@ -11,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "`study`")
 public class Study {
 
@@ -53,8 +53,8 @@ public class Study {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
 
-    @Column(name="status", insertable = false)
-    private Integer status;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 
     @Transient
     private Map<String, Object> writer;
@@ -72,11 +72,18 @@ public class Study {
     private List<Category> categories;
 
     @OneToOne
-    @JoinColumn(name="major_region", insertable = false, updatable = false)
+    @JoinColumn(name = "major_region", insertable = false, updatable = false)
     private MajorRegion majorRegion;
 
     @OneToOne
-    @JoinColumn(name="minor_region", insertable = false, updatable = false)
+    @JoinColumn(name = "minor_region", insertable = false, updatable = false)
     private MinorRegion minorRegion;
 
+    @AllArgsConstructor
+    public enum Status {
+        DELETE(0), ACTIVE(1), FINISH(2);
+
+        @Getter
+        Integer status;
+    }
 }

@@ -1,6 +1,7 @@
 package org.project.study.service;
 
 import com.google.common.collect.ImmutableMap;
+import org.project.study.exception.ValidateException;
 import org.project.study.model.*;
 import org.project.study.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.project.study.model.Study.Status;
 
 @Service
 public class StudyService {
@@ -36,6 +38,9 @@ public class StudyService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    GraphRepository graphRepository;
 
     public void insertStudy(Study study) {
         studyRepository.saveAndFlush(study);
@@ -75,16 +80,12 @@ public class StudyService {
     }
 
     public Map<String, Object> getStudyList(SearchDTO searchDTO) {
-        Page<Study> studies = this.searchStudy(searchDTO);
 
-        List<Long> writerIds = studies.stream().map(s -> s.getStudyWriterId()).collect(Collectors.toList());
-        List<User> users = userRepository.findByIdIn(writerIds);
-        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(u -> u.getId(), Function.identity()));
-        studies.getContent().forEach(study -> {
-            User user = userMap.get(study.getStudyWriterId());
-            study.setWriter(ImmutableMap.of("id", user.getId(), "name", user.getNickname(), "image", user.getImage()));
-        });
-        return ImmutableMap.of("studies", studies.getContent(), "total", studies.getTotalPages());
+        Page<Study> studyPage = this.searchStudy(searchDTO);
+        List<Study> studies = studyPage.getContent();
+        this.setWriter(studies);
+
+        return ImmutableMap.of("studies", studies, "total", studyPage.getTotalPages());
     }
 
     public Study getStudy(Long id) {
@@ -92,6 +93,43 @@ public class StudyService {
         User user = userRepository.findById(study.getStudyWriterId()).get();
         study.setWriter(ImmutableMap.of("id", user.getId(), "name", user.getNickname(), "image", user.getImage()));
         return study;
+    }
+
+    public List<Study> getLikeStudyList(Long userId) {
+        List<Graph> likeGraph = graphRepository.findByUserIdAndType(userId, "like");
+        List<Long> studyIds = likeGraph.stream().map(g -> g.getStudyId()).collect(Collectors.toList());
+
+        List<Study> studies = studyRepository.findByIdIn(studyIds);
+        this.setWriter(studies);
+        return studies;
+    }
+
+    public List<Study> getRecruitStudyList(Long userId) {
+
+        List<Study> studies = studyRepository.findByStudyWriterId(userId);
+        this.setWriter(studies);
+        return studies;
+    }
+
+    public void setStudyStatus(Long userId, Long studyId, Status status) throws ValidateException {
+        Study study = studyRepository.findByIdAndStudyWriterId(studyId, userId);
+        if (study == null) {
+            throw new ValidateException();
+        }
+        study.setStatus(status);
+
+        studyRepository.save(study);
+
+    }
+
+    private void setWriter(List<Study> studies) {
+        List<Long> writerIds = studies.stream().map(s -> s.getStudyWriterId()).collect(Collectors.toList());
+        List<User> users = userRepository.findByIdIn(writerIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(u -> u.getId(), Function.identity()));
+        studies.forEach(study -> {
+            User user = userMap.get(study.getStudyWriterId());
+            study.setWriter(ImmutableMap.of("id", user.getId(), "name", user.getNickname(), "image", user.getImage()));
+        });
     }
 
     private Page<Study> searchStudy(SearchDTO searchDTO) {

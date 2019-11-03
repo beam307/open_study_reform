@@ -2,15 +2,13 @@ package org.project.study.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "`reply`")
 public class Reply {
 
@@ -45,4 +43,5 @@ public class Reply {
     public String getNickname() {
         return user.getNickname();
     }
+
 }

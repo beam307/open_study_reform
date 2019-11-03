@@ -44,12 +44,12 @@ public class FormLoginProcessingFilter extends AbstractAuthenticationProcessingF
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             logger.info("Authentication method not supported. Request method: " + request.getMethod());
-            throw new AuthMethodNotSupportedException("Authentication method not supported");
+            throw new AuthMethodNotSupportedException("잘못된 요청입니다.");
         }
         LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
 
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
-            throw new AuthenticationServiceException("Username or Password not provided");
+            throw new AuthenticationServiceException("이메일주소나 비밀번호를 입력해주세요.");
         }
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());

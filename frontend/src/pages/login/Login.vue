@@ -17,6 +17,7 @@
                             v-model="email"
                             :rules="emailRules"
                             required
+                            @keyup.enter="submit"
               ></v-text-field>
               <v-text-field class="caption"
                             label="비밀번호"
@@ -25,6 +26,7 @@
                             type="password"
                             :rules="passwordRules"
                             required
+                            @keyup.enter="submit"
               ></v-text-field>
               <v-checkbox
                 label="아이디 저장"
@@ -69,7 +71,6 @@
                 <v-card-title class="headline">
                   <span class="title">비밀번호찾기</span>
                   <v-spacer></v-spacer>
-                  v
                   <v-btn icon @click="findPwd = false">
                     <v-icon>close</v-icon>
                   </v-btn>
@@ -89,7 +90,7 @@
           </v-card-text>
           <v-card-text class="py-1 caption">
             아직 오픈스터디를 가입하시지않으셨나요?
-            <router-link class="link" to="/join">회원가입</router-link>
+            <router-link class="link" to="/user/signUp">회원가입</router-link>
           </v-card-text>
         </v-card>
         <Footer/>

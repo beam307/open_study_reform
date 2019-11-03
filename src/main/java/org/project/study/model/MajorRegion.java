@@ -1,18 +1,14 @@
 package org.project.study.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "`major_region`")
-@ToString
 public class MajorRegion {
 
     @Id

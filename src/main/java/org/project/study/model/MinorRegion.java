@@ -1,8 +1,6 @@
 package org.project.study.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.Entity;
@@ -11,10 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "`minor_region`")
-@ToString
+@Data
 public class MinorRegion {
 
     @Id
@@ -25,7 +21,7 @@ public class MinorRegion {
     @Transient
     @JsonIgnore
     public Integer getCode() {
-        return this.id/100;
+        return this.id / 100;
     }
 
 }

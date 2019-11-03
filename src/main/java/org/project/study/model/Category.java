@@ -1,17 +1,13 @@
 package org.project.study.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "`category`")
-@ToString
 public class Category {
 
     @Id
@@ -20,7 +16,6 @@ public class Category {
 
     private String name;
 
-    @Transient
     @JsonIgnore
     public String getTitle() {
         String title = "";

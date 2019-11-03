@@ -31,8 +31,9 @@ public class ReplyController {
     }
 
     @GetMapping("/{studyId}")
-    public ResponseEntity<List<Reply>> getReplies(@PathVariable Long studyId) {
+    public ResponseEntity<List<Reply>> getReplies(@AuthenticationPrincipal User user, @PathVariable Long studyId) {
 
-        return ResponseEntity.ok(replyService.getReplies(studyId));
+        Long userId = user != null ? user.getId() : -1;
+        return ResponseEntity.ok(replyService.getReplies(userId, studyId));
     }
 }

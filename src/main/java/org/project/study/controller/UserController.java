@@ -74,7 +74,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("leave")
+    @PostMapping("/leave")
     public void leaveUser(@AuthenticationPrincipal User user) {
         userService.leaveUser(user.getId());
     }

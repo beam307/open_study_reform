@@ -43,70 +43,73 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
-  .thumbnail .thumbnail-image {
-    width: 100%;
-    height: 150px;
-    max-height: 150px;
+  .thumbnail {
+    .thumbnail-image {
+      width: 100%;
+      height: 150px;
+      max-height: 150px;
+    }
+
+    .preview {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 5;
+      webkit-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    .preview img {
+      z-index: 5;
+      width: 100px;
+      height: 100px;
+      max-width: 100px;
+      max-height: 100px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      border: 5px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .overlay {
+      z-index: 1;
+      position: absolute;
+      height: 150px;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .study-title {
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      line-height: 1;
+    }
+
+    .icon {
+      position: relative;
+      top: 0;
+      right: 5px;
+      font-size: 15px;
+      padding-left: 8px;
+      color: #555;
+      float: right;
+    }
+
+    .icon .i {
+      font-size: 20px !important;
+    }
+
+    .icon .thumbnail-info {
+      font-size: 15px;
+    }
+
+    .thumbnail-description {
+      flex-direction: column;
+      width: 100%;
+    }
   }
 
-  .thumbnail .preview {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 5;
-    webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-  }
-
-  .thumbnail .preview img {
-    z-index: 5;
-    width: 100px;
-    height: 100px;
-    max-width: 100px;
-    max-height: 100px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.5);
-  }
-
-  .thumbnail .overlay {
-    z-index: 1;
-    position: absolute;
-    height: 150px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .thumbnail .study-title {
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    line-height: 1;
-  }
-
-  .thumbnail .icon {
-    position: relative;
-    top: 0;
-    right: 2px;
-    font-size: 15px;
-    padding-left: 8px;
-    color: #555;
-    float: right;
-  }
-
-  .thumbnail .icon .i {
-    font-size: 20px !important;
-  }
-
-  .thumbnail .icon .thumbnail-info {
-    font-size: 15px;
-  }
-
-  .thumbnail .thumbnail-description {
-    flex-direction: column;
-    width: 100%;
-  }
 </style>

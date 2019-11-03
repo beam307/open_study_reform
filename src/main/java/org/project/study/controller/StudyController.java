@@ -1,13 +1,17 @@
 package org.project.study.controller;
 
+import org.project.study.exception.ValidateException;
 import org.project.study.model.*;
 import org.project.study.service.StudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.project.study.model.Study.Status;
 
 @RestController
 @RequestMapping("/api/study")
@@ -62,6 +66,36 @@ public class StudyController {
     @GetMapping("/majorRegion")
     public List<MajorRegion> getMajorRegionList() {
         return studyService.getMajorRegionList();
+    }
+
+    @GetMapping("/like")
+    public List<Study> getLikeStudyList(@AuthenticationPrincipal User user) {
+        return studyService.getLikeStudyList(user.getId());
+    }
+
+    @GetMapping("/recruit")
+    public List<Study> getRecruitStudyList(@AuthenticationPrincipal User user) {
+        return studyService.getRecruitStudyList(user.getId());
+    }
+
+    @PostMapping("/{studyId}/finish")
+    public ResponseEntity setStudyFinish(@AuthenticationPrincipal User user, @PathVariable Long studyId) {
+        try {
+            studyService.setStudyStatus(user.getId(), studyId, Status.FINISH);
+            return ResponseEntity.ok().build();
+        } catch (ValidateException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/{studyId}/delete")
+    public ResponseEntity setStudyDelete(@AuthenticationPrincipal User user, @PathVariable Long studyId) {
+        try {
+            studyService.setStudyStatus(user.getId(), studyId, Status.DELETE);
+            return ResponseEntity.ok().build();
+        } catch (ValidateException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
