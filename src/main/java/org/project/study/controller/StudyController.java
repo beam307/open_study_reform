@@ -75,7 +75,17 @@ public class StudyController {
 
     @GetMapping("/recruit")
     public List<Study> getRecruitStudyList(@AuthenticationPrincipal User user) {
-        return studyService.getRecruitStudyList(user.getId());
+        return studyService.getMyStudyList(user.getId(), Status.ACTIVE);
+    }
+
+    @GetMapping("/apply")
+    public List<Study> getApplyStudyList(@AuthenticationPrincipal User user) {
+        return studyService.getApplyStudyList(user.getId());
+    }
+
+    @GetMapping("/finish")
+    public List<Study> getFinishStudyList(@AuthenticationPrincipal User user) {
+        return studyService.getMyStudyList(user.getId(), Status.FINISH);
     }
 
     @PostMapping("/{studyId}/finish")
@@ -92,6 +102,16 @@ public class StudyController {
     public ResponseEntity setStudyDelete(@AuthenticationPrincipal User user, @PathVariable Long studyId) {
         try {
             studyService.setStudyStatus(user.getId(), studyId, Status.DELETE);
+            return ResponseEntity.ok().build();
+        } catch (ValidateException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/{studyId}/apply")
+    public ResponseEntity setStudyApply(@AuthenticationPrincipal User user, @PathVariable Long studyId) {
+        try {
+            studyService.setStudyApply(user.getId(), studyId);
             return ResponseEntity.ok().build();
         } catch (ValidateException e) {
             return ResponseEntity.badRequest().build();

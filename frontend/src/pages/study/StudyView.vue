@@ -1,6 +1,11 @@
 <template>
   <v-container fluid class="px-0 study-view">
-    <v-carousel height="400" cycle hide-delimiters>
+    <div v-if="study.status == 'FINISH'" class="finish">
+      <div class="finish-text">
+        완료
+      </div>
+    </div>
+    <v-carousel height="400" hide-delimiters>
       <v-carousel-item
         v-for="(image,i) in study.meta.images"
         :key="i"
@@ -96,19 +101,24 @@
     </v-layout>
     <v-layout wrap>
       <v-flex xs12 sm12 class="text-xs-right">
-        <template v-if="study.studyWriterId == userId">
+        <template v-if="study.studyWriterId == userId && study.status == 'ACTIVE'">
           <v-btn @click="finish" color="info">완료</v-btn>
           <v-btn @click="studyDelete" color="error">삭제</v-btn>
           <v-btn :to="{ name: 'studyEdit', params: { id: this.$route.params.id }}"
                  color="warning">수정
           </v-btn>
         </template>
-        <v-btn to="/study/list" color="success">목록</v-btn>
+        <template v-else>
+          <v-btn @click="studyApply" color="error">신청</v-btn>
+        </template>
+        <v-btn to="/study/list" color="success" class="list-btn">목록</v-btn>
       </v-flex>
     </v-layout>
-    <v-divider></v-divider>
-    <ReplyReg></ReplyReg>
-    <ReplyList :studyWriterId=study.studyWriterId></ReplyList>
+    <template v-if="study.status == 'ACTIVE'">
+      <v-divider></v-divider>
+      <ReplyReg></ReplyReg>
+      <ReplyList :studyWriterId=study.studyWriterId></ReplyList>
+    </template>
   </v-container>
 </template>
 
@@ -138,7 +148,8 @@
                         id: 0,
                         name: '',
                         image: ''
-                    }
+                    },
+                    status: ''
                 },
                 bookmarkDone: true,
                 bookmark: false,
@@ -146,7 +157,7 @@
         },
         methods: {
             setBookmark() {
-                if (this.bookmarkDone) {
+                if (this.bookmarkDone && this.study.status == 'ACTIVE') {
                     this.bookmarkDone = false;
                     this.$authorizedApi.post('/api/graph/like', {studyId: this.$route.params.id})
                         .then((r) => {
@@ -189,6 +200,7 @@
                                     timer: 1500,
                                     text: '해당스터디를 완료했습니다.'
                                 });
+                                this.$router.push({name: 'studyList'});
                             })
                             .catch((e) => {
                                 console.log(e);
@@ -217,6 +229,7 @@
                                     timer: 1500,
                                     text: '해당스터디를 삭제했습니다.'
                                 });
+                                this.$router.push({name: 'studyList'});
                             })
                             .catch((e) => {
                                 console.log(e);
@@ -224,6 +237,35 @@
                                     type: "error",
                                     timer: 1500,
                                     text: '삭제하는데 에러가 발생하였습니다.'
+                                });
+                            });
+                    }
+                });
+
+            },
+            studyApply() {
+                this.$swal.fire({
+                    title: '정말 신청하시겠습니까?',
+                    text: "스터디장에게 이름, 연락처 등이 전달 됩니다.",
+                    type: 'info',
+                    showCancelButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        this.$authorizedApi.post(`/api/study/${this.$route.params.id}/apply`)
+                            .then((r) => {
+                                this.$swal.fire({
+                                    type: "info",
+                                    timer: 1500,
+                                    title: '신청이 완료되었습니다.',
+                                    text: '스터디장에게 연락 올때까지 기다리십시요.'
+                                });
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                                this.$swal.fire({
+                                    type: "error",
+                                    timer: 1500,
+                                    text: '이미 스터디를 신청하였습니다.'
                                 });
                             });
                     }
@@ -274,6 +316,29 @@
 
 <style lang="scss">
   .study-view {
+    position: relative;
+
+    .finish {
+      position: absolute;
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.4);
+
+      .finish-text {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 101;
+        transform: translateX(-50%) translateY(-50%);
+        display: inline-block;
+        font-size: 90px;
+        font-weight: bold;
+        padding: 10px 35px;
+        border: 10px solid;
+        border-radius: 40px;
+      }
+    }
 
     .v-carousel__next .v-btn.v-btn--icon {
       background: #999;
@@ -291,6 +356,10 @@
       color: rgba(0, 0, 0, 0.54) !important;
       font-size: 14px;
       font-weight: 500;
+    }
+
+    .list-btn {
+      z-index: 105;
     }
 
   }

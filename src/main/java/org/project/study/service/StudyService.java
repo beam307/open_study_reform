@@ -104,9 +104,17 @@ public class StudyService {
         return studies;
     }
 
-    public List<Study> getRecruitStudyList(Long userId) {
+    public List<Study> getApplyStudyList(Long userId) {
+        List<Graph> applyGraph = graphRepository.findByUserIdAndType(userId, "apply");
+        List<Long> studyIds = applyGraph.stream().map(g -> g.getStudyId()).collect(Collectors.toList());
 
-        List<Study> studies = studyRepository.findByStudyWriterId(userId);
+        List<Study> studies = studyRepository.findByIdIn(studyIds);
+        this.setWriter(studies);
+        return studies;
+    }
+
+    public List<Study> getMyStudyList(Long userId, Status status) {
+        List<Study> studies = studyRepository.findByStudyWriterIdAndStatus(userId, status);
         this.setWriter(studies);
         return studies;
     }
@@ -119,6 +127,18 @@ public class StudyService {
         study.setStatus(status);
 
         studyRepository.save(study);
+
+    }
+
+    public void setStudyApply(Long userId, Long studyId) throws ValidateException {
+        Graph graph = graphRepository.findByUserIdAndStudyIdAndType(userId, studyId, "apply");
+        if (graph != null) {
+            throw new ValidateException();
+        }
+
+        Graph applyGraph = Graph.builder().userId(userId).studyId(studyId).type("apply").build();
+
+        graphRepository.save(applyGraph);
 
     }
 
@@ -135,6 +155,7 @@ public class StudyService {
     private Page<Study> searchStudy(SearchDTO searchDTO) {
         Pageable pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getCount(), Sort.by(Sort.Direction.DESC, searchDTO.getFilter()));
 
+        // TODO 검색 기능 수정해야할듯...
         List<Long> studyIds = null;
         if (searchDTO.getCategory() != null) {
             studyIds = studyCategoryRepository.findByCategoryId(searchDTO.getCategory())
@@ -145,9 +166,9 @@ public class StudyService {
 
         if (studyIds != null) {
             return searchDTO.getRegion() != null ?
-                    studyRepository.findByIdInAndMajorRegionId(studyIds, searchDTO.getRegion(), pageable) : studyRepository.findByIdIn(studyIds, pageable);
+                    studyRepository.findByIdInAndMajorRegionIdAndStatus(studyIds, searchDTO.getRegion(), Status.ACTIVE, pageable) : studyRepository.findByIdInAndStatus(studyIds, Status.ACTIVE, pageable);
         } else {
-            return searchDTO.getRegion() != null ? studyRepository.findByMajorRegionId(searchDTO.getRegion(), pageable) : studyRepository.findAll(pageable);
+            return searchDTO.getRegion() != null ? studyRepository.findByMajorRegionIdAndStatus(searchDTO.getRegion(), Status.ACTIVE, pageable) : studyRepository.findByStatus(Status.ACTIVE, pageable);
         }
     }
 }

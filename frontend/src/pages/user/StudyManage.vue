@@ -30,10 +30,20 @@
         </v-layout>
       </v-tab-item>
 
-      <v-tab-item value="apply">ee
+      <v-tab-item value="apply">
+        <v-layout wrap>
+          <v-flex xs12 sm4 pa-2 mb-2 v-for="study in applyStudies" :key="study.id">
+            <Thumbnail :study="study"></Thumbnail>
+          </v-flex>
+        </v-layout>
       </v-tab-item>
 
-      <v-tab-item value="finish">ff
+      <v-tab-item value="finish">
+        <v-layout wrap>
+          <v-flex xs12 sm4 pa-2 mb-2 v-for="study in finishStudies" :key="study.id">
+            <Thumbnail :study="study"></Thumbnail>
+          </v-flex>
+        </v-layout>
       </v-tab-item>
     </v-tabs>
   </v-container>
@@ -46,6 +56,8 @@
             return {
                 likeStudies: [],
                 recruitStudies: [],
+                applyStudies: [],
+                finishStudies: [],
             }
         },
         created() {
@@ -61,6 +73,22 @@
                 .then((result) => {
                     this.recruitStudies = result.data;
                     this.recruitStudies.map(s => s.meta = JSON.parse(s.meta));
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            this.$http.get('/api/study/apply')
+                .then((result) => {
+                    this.applyStudies = result.data;
+                    this.applyStudies.map(s => s.meta = JSON.parse(s.meta));
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            this.$http.get('/api/study/finish')
+                .then((result) => {
+                    this.finishStudies = result.data;
+                    this.finishStudies.map(s => s.meta = JSON.parse(s.meta));
                 })
                 .catch((e) => {
                     console.log(e);

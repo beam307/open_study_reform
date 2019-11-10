@@ -1,19 +1,19 @@
 <template>
   <v-card class="thumbnail" @click="goToStudy">
-    <div>
+    <div class="image-wrapper">
       <div class="overlay">
         <v-subheader class="subtitle-1 font-weight-bold white--text study-title">{{study.name}}</v-subheader>
       </div>
       <img class="thumbnail-image" v-if="study.meta.images.length > 0"
            :src="require(`@/assets/temp/${study.meta.images[0]}`)">
       <img class="thumbnail-image" v-else :src="require('@/assets/temp/study_default.jpg')">
-      <div class="icon">
-        <v-icon class="i">remove_red_eye</v-icon>
-        <span class="thumbnail-info"> {{study.viewCnt}}</span></div>
-      <div class="icon">
-        <v-icon class="i">person</v-icon>
-        <span class="thumbnail-info"> {{study.maxMemberCnt}}</span></div>
     </div>
+    <div class="icon">
+      <v-icon class="i">remove_red_eye</v-icon>
+      <span class="thumbnail-info"> {{study.viewCnt}}</span></div>
+    <div class="icon">
+      <v-icon class="i">person</v-icon>
+      <span class="thumbnail-info"> {{study.maxMemberCnt}}</span></div>
     <div class="preview">
       <img :src="require(`@/assets/${study.writer.image}`)"/>
     </div>
@@ -46,10 +46,23 @@
 <style scoped lang="scss">
 
   .thumbnail {
+
+    &:hover {
+      .thumbnail-image {
+        transform: scale( 1.5 );
+      }
+    }
+
+    .image-wrapper {
+      overflow: hidden;
+      max-height: 150px;
+    }
+
     .thumbnail-image {
       width: 100%;
       height: 150px;
       max-height: 150px;
+      transition: all linear .3s;
     }
 
     .preview {
@@ -59,18 +72,18 @@
       z-index: 5;
       webkit-transform: translateX(-50%) translateY(-50%);
       transform: translateX(-50%) translateY(-50%);
-    }
 
-    .preview img {
-      z-index: 5;
-      width: 100px;
-      height: 100px;
-      max-width: 100px;
-      max-height: 100px;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
-      border-radius: 50%;
-      border: 5px solid rgba(255, 255, 255, 0.5);
+      img {
+        z-index: 5;
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+        max-height: 100px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        border: 5px solid rgba(255, 255, 255, 0.5);
+      }
     }
 
     .overlay {
@@ -79,13 +92,6 @@
       height: 150px;
       width: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .study-title {
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      line-height: 1;
     }
 
     .icon {
@@ -104,6 +110,13 @@
 
     .icon .thumbnail-info {
       font-size: 15px;
+    }
+
+    .study-title {
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      line-height: 1;
     }
 
     .thumbnail-description {
