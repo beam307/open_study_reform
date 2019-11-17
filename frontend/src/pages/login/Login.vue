@@ -5,9 +5,9 @@
         <Header/>
         <v-card class="pa-4">
           <div>
-            <a href="/login/kakao" class="kakao-login sns"> <img src="/resources/images/kakao-icon.jpg" alt="">
+            <a href="/" class="kakao-login sns"> <img :src="require('@/assets/img/kakao-icon.jpg')" alt="">
               카카오계정으로로그인</a>
-            <a href="/login/naverLogin" class="naver-login sns"> <img src="/resources/images/naver-icon.jpg" alt="">
+            <a href="/" class="naver-login sns"> <img :src="require('@/assets/img/naver-icon.jpg')" alt="">
               네이버계정으로로그인</a>
           </div>
           <v-card-text class="pt-2">
@@ -118,7 +118,7 @@
                 email: '',
                 emailRules: [
                     (v) => !!v || '이메일이 필요합니다.',
-                    (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 양식이 잘못되었습니다.'
+                    (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 양식이 잘못되었습니다.'
                 ],
             }
         },
@@ -210,7 +210,7 @@
   @media (max-width: 600px) {
     .link {
       display: block;
-      padding-left: 0px;
+      padding-left: 0;
     }
 
   }
