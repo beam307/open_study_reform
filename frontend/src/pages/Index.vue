@@ -110,6 +110,11 @@
   #visual .v-input__slot:before {
     border-color: #f2f2f2 !important;
   }
+  @media only screen and (min-width: 1904px) {
+    .container {
+      max-width: 1185px !important;
+    }
+  }
 </style>
 <style scoped>
   #visual {

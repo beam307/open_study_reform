@@ -24,6 +24,7 @@
     "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-filepond": "^5.1.1",
+    "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
     "vue-sweetalert2": "^2.1.5",
     "vuetify": "^1.5.14",

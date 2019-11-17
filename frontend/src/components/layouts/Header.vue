@@ -3,6 +3,7 @@
     <v-btn flat to="/" class="home">OpenStudy</v-btn>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-xs-only">
+      <v-btn flat to="/notice/list">공지사항</v-btn>
       <v-btn flat to="/study/edit/new">스터디등록</v-btn>
       <template v-if="!this.authenticated">
         <v-btn flat to="/login">로그인</v-btn>
