@@ -4,12 +4,7 @@
       <v-flex xs12 sm8 md5>
         <Header/>
         <v-card class="pa-4">
-          <div>
-            <a href="/" class="kakao-login sns"> <img :src="require('@/assets/img/kakao-icon.jpg')" alt="">
-              카카오계정으로로그인</a>
-            <a href="/" class="naver-login sns"> <img :src="require('@/assets/img/naver-icon.jpg')" alt="">
-              네이버계정으로로그인</a>
-          </div>
+          <v-card-title><h3 class="headline">로그인</h3></v-card-title>
           <v-card-text class="pt-2">
             <v-form v-model="valid" ref="form">
               <v-text-field class="caption"
