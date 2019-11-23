@@ -28,6 +28,5 @@ HELP.md
 ### VS Code ###
 .vscode/
 
-db.properties
-security.properties
+*.yml
 
