@@ -82,4 +82,8 @@ public class UserService {
         String encode = passwordEncoder.encode(pwd);
         return encode;
     }
+
+    public boolean isPwdMatch(String p, String p2) {
+        return passwordEncoder.matches(p, p2);
+    }
 }

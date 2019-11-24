@@ -9,15 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
 public class FormAuthenticationProvider implements AuthenticationProvider {
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Autowired
     private UserService userService;
@@ -31,7 +27,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 
         User user = userService.getUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("등록되지 않는 아이디입니다."));
 
-        if (!encoder.matches(pwd, user.getPwd()) || !user.getActive()) {
+        if (!userService.isPwdMatch(pwd, user.getPwd()) || !user.getActive()) {
             throw new BadCredentialsException("아이디가 없거나 비밀번호가 틀렸습니다.");
         }
 
