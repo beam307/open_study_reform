@@ -5,8 +5,8 @@
         <v-subheader class="subtitle-1 font-weight-bold white--text study-title">{{study.name}}</v-subheader>
       </div>
       <img class="thumbnail-image" v-if="study.meta.images.length > 0"
-           :src="require(`@/assets/temp/${study.meta.images[0]}`)">
-      <img class="thumbnail-image" v-else :src="require('@/assets/temp/study_default.jpg')">
+           :src="study.meta.images[0]">
+      <img class="thumbnail-image" v-else src="https://openstudy.s3.ap-northeast-2.amazonaws.com/img/study_default.jpg">
     </div>
     <div class="icon">
       <v-icon class="i">remove_red_eye</v-icon>
@@ -15,7 +15,7 @@
       <v-icon class="i">person</v-icon>
       <span class="thumbnail-info"> {{study.maxMemberCnt}}</span></div>
     <div class="preview">
-      <img :src="require(`@/assets/${study.writer.image}`)"/>
+      <img :src="study.writer.image"/>
     </div>
     <v-card-title primary-title class="pt-4 pb-0 justify-center thumbnail-description">
       <h3 class="body-2 font-weight-bold">{{study.writer.name}}</h3>

@@ -54,7 +54,7 @@ public class Study {
     private Date startDate;
 
     @Enumerated(EnumType.ORDINAL)
-    private Status status;
+    private Status status = Status.ACTIVE;
 
     @Transient
     private Map<String, Object> writer;

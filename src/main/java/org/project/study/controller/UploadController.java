@@ -17,23 +17,22 @@ public class UploadController {
     private UploadService uploadService;
 
     @PostMapping("/image")
-    public ResponseEntity<String> saveTempImage(MultipartRequest multipartRequest) {
+    public ResponseEntity<Map> saveTempImage(MultipartRequest multipartRequest) {
         MultipartFile multipartFile = multipartRequest.getFile("image");
 
-        String replaceFileName = uploadService.saveTempImage(multipartFile);
+        Map replaceFileName = uploadService.saveS3Image(multipartFile);
         if (replaceFileName == null) {
-            return ResponseEntity.badRequest().body("");
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(replaceFileName);
     }
 
     @PostMapping("/delete")
-    public Integer deleteTempImage(@RequestBody Map<String, String> body) {
+    public ResponseEntity deleteTempImage(@RequestBody Map<String, String> body) {
         String fileName = body.getOrDefault("fileName", null);
 
-        Integer result = uploadService.deleteTempImage(fileName);
+        uploadService.deleteS3Image(fileName);
 
-        return result;
-
+        return ResponseEntity.ok().build();
     }
 }

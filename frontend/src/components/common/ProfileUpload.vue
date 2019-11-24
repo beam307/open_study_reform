@@ -6,7 +6,7 @@
            @drop="upload($event.target.name, $event.target.files)"/>
     <h3>click or drag&drop </h3>
     <div class="preview">
-      <img v-if="imageUrl" :src="require(`@/assets/${imageUrl}`)" @click="trigger"/>
+      <img v-if="image" :src="image" @click="trigger"/>
     </div>
   </div>
 </template>
@@ -19,11 +19,6 @@
             return {
                 saveURL: '/api/upload/image',
                 deleteURL: '/api/upload/delete',
-            }
-        },
-        computed: {
-            imageUrl() {
-                return this.image;
             }
         },
         methods: {
@@ -44,8 +39,8 @@
                 formData.append(name, files[0], files[0].name);
                 this.$http.post(this.saveURL, formData)
                     .then((result) => {
-                        let fileName = result.data;
-                        this.$emit('image', `temp/${fileName}`);
+                        let fileName = result.data.url;
+                        this.$emit('image', fileName);
                     })
                     .catch((e) => {
                         console.log(e);

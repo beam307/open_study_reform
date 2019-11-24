@@ -10,11 +10,11 @@
         v-for="(image,i) in study.meta.images"
         :key="i"
         v-if="image"
-        :src="require(`../../assets/temp/${image}`)"
+        :src="image"
       ></v-carousel-item>
       <div class="user">
         <div class="user-img">
-          <img v-if="study.writer.image " :src="require(`@/assets/${study.writer.image}`)">
+          <img v-if="study.writer.image" :src="study.writer.image" :alt="study.writer.image">
         </div>
         <div class="user-info">
           <h3 class="title font-weight-black white--text">{{study.name}}</h3>
@@ -279,7 +279,7 @@
                     this.study = result.data;
                     this.study.meta = JSON.parse(this.study.meta);
                     if (!this.study.meta.images.length) {
-                        this.study.meta.images.push('study_default.jpg');
+                        this.study.meta.images.push('https://openstudy.s3.ap-northeast-2.amazonaws.com/img/study_default.jpg');
                     }
                     this.study.uniqueCategories = _.uniqBy(this.study.categories, (c) => c.title);
                 })

@@ -69,7 +69,7 @@ public class User implements UserDetails {
     @JsonGetter
     public String getImage() {
         if (this.image == null) {
-            return "M".equalsIgnoreCase(this.gender) ? "img/male.jpg" : "img/female.jpg";
+            return "M".equalsIgnoreCase(this.gender) ? "https://openstudy.s3.ap-northeast-2.amazonaws.com/img/male.jpg" : "https://openstudy.s3.ap-northeast-2.amazonaws.com/img/female.jpg";
         }
         return this.image;
     }

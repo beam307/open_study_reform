@@ -35,9 +35,9 @@
                 }
                 this.$http.post(this.saveURL, formData, config)
                     .then((result) => {
-                        let fileName = result.data;
-                        load(fileName);
-                        this.images.push(fileName);
+                        let file = result.data;
+                        load(file.key);
+                        this.images.push(file.url);
                     })
                     .catch((e) => {
                         console.log(e);
@@ -46,7 +46,7 @@
             },
             revert(uniqueFileId, load, error) {
                 this.$http.post(this.deleteURL, {fileName: uniqueFileId})
-                    .then((result) => {
+                    .then(() => {
                         let index = this.images.indexOf(uniqueFileId);
                         this.images.splice(index, 1);
                         load();
