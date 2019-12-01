@@ -17,6 +17,11 @@
     <v-menu class="hidden-sm-and-up">
       <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
       <v-list>
+        <v-list-tile to="/notice/list">
+          <v-list-tile-content>
+            <v-list-tile-title>공지사항</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile to="/study/edit/new">
           <v-list-tile-content>
             <v-list-tile-title>스터디등록</v-list-tile-title>

@@ -1,5 +1,6 @@
 package org.project.study.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.project.study.exception.ValidateException;
 import org.project.study.model.*;
@@ -40,7 +41,13 @@ public class StudyService {
     UserRepository userRepository;
 
     @Autowired
+    UserAdditionalRepository userAdditionalRepository;
+
+    @Autowired
     GraphRepository graphRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     public void insertStudy(Study study) {
         studyRepository.saveAndFlush(study);
@@ -79,8 +86,22 @@ public class StudyService {
         return majorRegions;
     }
 
-    public Map<String, Object> getStudyList(SearchDTO searchDTO) {
-
+    public Map<String, Object> getStudyList(SearchDTO searchDTO, String type, Long userId) {
+        if (type.equals("best")) {
+            List<Long> studyIds = graphRepository.findByLikeCount();
+            List<Study> studies = studyRepository.findByIdIn(studyIds).stream().limit(6).collect(Collectors.toList());
+            this.setWriter(studies);
+            return ImmutableMap.of("studies", studies);
+        } else if (type.equals("recommend")) {
+            UserAdditional userAdditional = userAdditionalRepository.findByUserId(userId);
+            if (userAdditional != null) {
+                List<Integer> list = objectMapper.convertValue(userAdditional.getCategories(), List.class);
+                List<Long> studyIds = studyCategoryRepository.findByCategoryIdIn(list).stream().map(sc -> sc.getStudyId()).collect(Collectors.toList());
+                List<Study> studies = studyRepository.findByIdIn(studyIds);
+                this.setWriter(studies);
+                return ImmutableMap.of("studies", studies);
+            }
+        }
         Page<Study> studyPage = this.searchStudy(searchDTO);
         List<Study> studies = studyPage.getContent();
         this.setWriter(studies);

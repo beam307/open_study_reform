@@ -25,22 +25,25 @@ public class StudyController {
         try {
             studyService.insertStudy(study);
 
-           return ResponseEntity.ok("");
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("");
         }
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Map> studyList(@ModelAttribute SearchDTO searchDTO) {
-        return ResponseEntity.ok(studyService.getStudyList(searchDTO));
+    public ResponseEntity<Map> studyList(
+            @AuthenticationPrincipal User user,
+            @ModelAttribute SearchDTO searchDTO,
+            @RequestParam(required = false, defaultValue = "list") String type) {
+        return ResponseEntity.ok(studyService.getStudyList(searchDTO, type, user.getId()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Study> studyOne(@PathVariable Long id) {
         Study study = studyService.getStudy(id);
 
-        if(study == null) {
+        if (study == null) {
             return ResponseEntity.notFound().build();
         }
 

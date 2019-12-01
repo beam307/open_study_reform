@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface StudyCategoryRepository extends JpaRepository<StudyCategory, Long> {
     List<StudyCategory> findByCategoryId(Integer categoryId);
+
+    List<StudyCategory> findByCategoryIdIn(List<Integer> categoryId);
 }
