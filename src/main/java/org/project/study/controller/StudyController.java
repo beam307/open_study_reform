@@ -36,7 +36,9 @@ public class StudyController {
             @AuthenticationPrincipal User user,
             @ModelAttribute SearchDTO searchDTO,
             @RequestParam(required = false, defaultValue = "list") String type) {
-        return ResponseEntity.ok(studyService.getStudyList(searchDTO, type, user.getId()));
+
+        Long userId = user != null ? user.getId() : null;
+        return ResponseEntity.ok(studyService.getStudyList(searchDTO, type, userId));
     }
 
     @GetMapping("/{id}")

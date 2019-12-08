@@ -92,7 +92,7 @@ public class StudyService {
             List<Study> studies = studyRepository.findByIdIn(studyIds).stream().limit(6).collect(Collectors.toList());
             this.setWriter(studies);
             return ImmutableMap.of("studies", studies);
-        } else if (type.equals("recommend")) {
+        } else if (type.equals("recommend") && userId != null) {
             UserAdditional userAdditional = userAdditionalRepository.findByUserId(userId);
             if (userAdditional != null) {
                 List<Integer> list = objectMapper.convertValue(userAdditional.getCategories(), List.class);
