@@ -15,7 +15,7 @@
     "filepond-plugin-file-validate-type": "^1.2.4",
     "filepond-plugin-image-preview": "^4.2.1",
     "filepond-polyfill": "^1.0.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
     "sass-loader": "^8.0.0",
