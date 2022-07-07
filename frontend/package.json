@@ -16,7 +16,7 @@
     "filepond-plugin-image-preview": "^4.2.1",
     "filepond-polyfill": "^1.0.4",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "node-sass": "^4.13.0",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
